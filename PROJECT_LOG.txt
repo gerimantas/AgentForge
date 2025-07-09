@@ -1,0 +1,109 @@
+======================================================================
+ PROJEKTO DOKUMENTACIJA IR VYKDYMO EIGA: AgentForge
+======================================================================
+
+PROJEKTO TIKSLAS: Sukurti autonominę, save tobulinančią ir patikimą DI agentų sistemą,
+kurios pagrindinė funkcija – analizuoti ir optimizuoti vartotojo pateiktas
+užklausas (prompts), remiantis nuolat atnaujinama, patikrintų šaltinių žinių baze.
+
+BŪSENA: Vykdoma (In Progress)
+PASKUTINIS ATNAUJINIMAS: 2025-07-10
+
+----------------------------------------------------------------------
+ KŪRIMO ŽURNALAS IR KLAIDŲ ANALIZĖ (DEBUGGING SUMMARY)
+----------------------------------------------------------------------
+
+Šiame skyriuje apžvelgiamos pagrindinės techninės problemos, su kuriomis susidūrėme
+projekto pradžioje, ir jų sprendimai. Šie iššūkiai sustiprino projekto pamatus.
+
+1.  PROBLEMA: Python paketų, reikalaujančių C++ kompiliatoriaus, diegimo klaidos.
+    *   KLAIDOS POŽYMIS: `error: Microsoft Visual C++ 14.0 or greater is required.`
+    *   TIKROJI PRIEŽASTIS: Windows aplinkoje trūko būtinų įrankių (`Build Tools`),
+      kad būtų galima kompiliuoti Python paketus (pvz., `chroma-hnswlib`), kurie
+      turi C++ priklausomybių.
+    *   GALUTINIS SPRENDIMAS: Įdiegti "Microsoft C++ Build Tools" paketą, konkrečiai
+      pasirenkant "Desktop development with C++" darbo krūvį.
+
+2.  PROBLEMA: Python virtualios aplinkos (`.venv`) nestabilus aktyvavimas VSCode.
+    *   KLAIDOS POŽYMIS: `(.venv)` prierašas terminale tai atsirasdavo, tai dingdavo.
+      Skirtingi VSCode komponentai naudojo skirtingus Python interpretatorius.
+    *   TIKROJI PRIEŽASTIS: Sudėtinga problema, kurią lėmė kelios priežastys:
+      a) VSCode nustatymai nebuvo "užrakinti" per darbo sritį (`.workspace`).
+      b) Windows PowerShell vykdymo politika (Execution Policy) blokavo scenarijus.
+      c) PowerShell klaidingai aptikdavo ekrano skaitytuvą ir išjungdavo PSReadLine.
+    *   GALUTINIS SPRENDIMAS: Nustoti bandyti taisyti PowerShell ir apeiti problemą.
+      VSCode numatytasis terminalas buvo pakeistas į klasikinį `Command Prompt`,
+      o projekto nustatymai buvo išsaugoti `AgentForge.code-workspace` faile,
+      kas užtikrino stabilų ir automatinį `.venv` aktyvavimą.
+
+3.  PROBLEMA: Nuolatinės importavimo klaidos (`ModuleNotFoundError`, `ImportError`).
+    *   KLAIDOS POŽYMIS: `cannot import name '...' from '...'`.
+    *   TIKROJI PRIEŽASTIS: Šios klaidos kilo dėl greitos bibliotekų evoliucijos.
+      Mano pradinės instrukcijos rėmėsi senesnėmis `crewai` ir `langchain`
+      praktikomis. Tikrosios priežastys buvo:
+      a) Lokalaus failo pavadinimo konfliktas (`tools.py` su bibliotekos moduliu).
+      b) Neteisingai nurodyta `@tool` dekoratoriaus ir `BaseTool` klasės vieta,
+         kuri nuolat keitėsi tarp `crewai`, `crewai_tools` ir `langchain`.
+    *   GALUTINIS SPRENDIMAS: Išsiaiškinta, kad `crewai` naudoja `@tool` dekoratorių,
+      kuris yra importuojamas tiesiai iš `crewai.tools`. Vietinis failas buvo pervadintas
+      į `custom_tools.py`, kad būtų išvengta konfliktų.
+
+----------------------------------------------------------------------
+ PROJEKTO KŪRIMO PLANAS (ROADMAP)
+----------------------------------------------------------------------
+
+[✔] - Užbaigta
+[ ] - Vykdoma / Neužbaigta
+
+--- FAZĖ 1: SISTEMOS BRANDUOLYS IR PATIKIMUMO PAMATAS ---
+
+[✔] 1.1 Žingsnis: Šaltinių Kuravimo Modulio Sukūrimas
+    - Sukurtas `source_registry.yaml`.
+    - Apibrėžtas `Bibliotekininko` (Librarian) agentas.
+    - Sėkmingai išbandytas šaltinio vertinimo scenarijus.
+
+[✔] 1.2 Žingsnis: Pagrindinio Palaikymo Ciklo Implementavimas
+    - Sukurtas `custom_tools.py` su failų rašymo/skaitymo įrankiais.
+    - Apibrėžti `Žvalgo` (Researcher) ir `Architekto` (Architect) agentai.
+    - Sukurtas `run_maintenance.py` scenarijus.
+    - Sėkmingai įvykdytas, sukurti `ziniu_baze.md` ir `kanonine_sistema.md` failai.
+
+[ ] 1.3 Žingsnis: Anti-Haliucinacinės Gynybos Sukūrimas
+    - Apibrėžti griežtas instrukcijas agentų `backstory`.
+    - Sukurti `FactCheckerTool` (individualus įrankis).
+    - Atnaujinti `Kritiko` agento rolę, pridedant faktų tikrintojo atsakomybę.
+    - Atnaujinti `Validatoriaus` rolę su galutine patikra.
+
+[ ] 1.4 Žingsnis: Pagrindinio Vykdymo Ciklo Implementavimas
+    - Apibrėžti `Analitiko`, `Kritiko`, `Tobulintojo` agentus.
+    - Sukurti užduotis, kurios remiasi `kanonine_sistema.md`.
+    - Integruoti `max_iter` saugiklį.
+
+[ ] 1.5 Žingsnis: Orkestratoriaus (`main.py`) Sukūrimas
+    - Sukurti `main.py`, kuris leis pasirinkti, kurį ciklą (Palaikymo ar Vykdymo) paleisti.
+    - Iškelti visus saugiklių parametrus į `config.py`.
+
+--- FAZĖ 2: OPTIMIZAVIMAS IR SAVARANKIŠKAS MOKYMASIS ---
+
+[ ] 2.1 Žingsnis: Struktūrizuotos Žinių Bazės Įdiegimas
+[ ] 2.2 Žingsnis: Dinaminio Maršruto ir Resursų Valdymo Įdiegimas
+[ ] 2.3 Žingsnis: Uždaro Grįžtamojo Ryšio Ciklo Sukūrimas
+
+--- FAZĖ 3: PAŽANGI AUTONOMIJA IR PRODUKTO SUKŪRIMAS ---
+
+[ ] 3.1 Žingsnis: Aktyvaus Eksperimentavimo (A/B Testavimo) Įdiegimas
+[ ] 3.2 Žingsnis: Įrankių Auto-Generavimo Implementavimas
+[ ] 3.3 Žingsnis: Vartotojo Sąsajos Sukūrimas (API/GUI)
+[ ] 3.4 Žingsnis: Interaktyvaus "Žmogus Cikle" Režimo Įdiegimas
+
+
+----------------------------------------------------------------------
+ SEKANTYS VEIKSMAI (NEXT STEPS)
+----------------------------------------------------------------------
+
+BAIGĖME: 1.2 Žingsnį. Turime veikiantį Palaikymo Ciklą.
+PRADEDAME: 1.3 Žingsnį - Anti-Haliucinacinės Gynybos Sukūrimas.
+
+Kitas mūsų konkretus veiksmas bus modifikuoti `custom_tools.py` failą,
+pridedant `FactCheckerTool`, ir atnaujinti agentų instrukcijas, kad
+jie būtų skatinami tikrinti faktus ir vengti spėlionių.
