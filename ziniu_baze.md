@@ -1,5 +1,13 @@
-1. **A Survey of Prompt Engineering Methods in OpenAI**: This paper summarizes various prompting techniques and categorizes them based on different NLP tasks, presenting insights into their effectiveness and applicability across tasks. [Read more here](https://arxiv.org/abs/2407.12994).
+1. **Chain of Thought Prompting**:
+   - Description: This advanced technique involves prompting the model to generate a sequence of reasoning steps before delivering the final answer. It encourages the model to articulate its thought process, improving the quality and accuracy of its responses, particularly in complex tasks.
+   - Source: [OpenAI Blog - Best Practices for Prompt Engineering](https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-the-openai-api)
 
-2. **Best practices for prompt engineering with the OpenAI API**: This article discusses essential principles for crafting effective prompts, including placing instructions at the prompt's beginning and iterating on responses to enhance model performance. [Read more here](https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-the-openai-api).
+2. **Few-Shot and Zero-Shot Prompting**:
+   - Description: Few-shot prompting provides the model with a few examples of task inputs and expected outputs, while zero-shot prompting presents a task without prior examples. These techniques enhance model performance on unfamiliar tasks, allowing for greater flexibility in response generation.
+   - Source: [A Systematic Survey of Prompt Engineering Techniques](https://arxiv.org/abs/2406.06608)
 
-3. **Prompt Engineering Best Practices on Hugging Face**: This comprehensive guide covers best practices, techniques, and examples of prompt engineering in the context of transformers and large language models, providing foundational knowledge as well as advanced techniques. [Read more here](https://huggingface.co/docs/transformers/tasks/prompting).
+3. **Meta Prompting**:
+   - Description: Meta prompting utilizes a language model to generate or refine prompts systematically. This self-optimization process leads to higher quality inputs, enabling better output from the model and illustrating an effective interplay between human and machine collaboration.
+   - Source: [Hugging Face - Prompt Engineering](https://huggingface.co/docs/transformers/tasks/prompting)
+
+These techniques represent some of the most significant advancements in prompt engineering, providing valuable strategies for effectively harnessing the capabilities of language models.
