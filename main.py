@@ -1,81 +1,47 @@
-# 1. Importuojame reikiamas klases ir bibliotekas
-import os
-from crewai import Agent, Task, Crew, Process
-from crewai_tools import SerperDevTool
-from dotenv import load_dotenv
+# /AgentForge/main.py
 
-# 2. Įkeliame aplinkos kintamuosius (API raktus) iš .env failo
-load_dotenv()
+"""
+Pagrindinis AgentForge projekto paleidimo failas (Orkestratorius).
 
-# Patikriname, ar API raktai yra nustatyti
-openai_api_key = os.getenv("OPENAI_API_KEY")
-serper_api_key = os.getenv("SERPER_API_KEY")
+Šis scenarijus veikia kaip valdymo centras, leidžiantis vartotojui
+pasirinkti, kurią operaciją atlikti:
+1. Atnaujinti vidinę žinių bazę (Palaikymo Ciklas).
+2. Optimizuoti konkrečią vartotojo užklausą (Vykdymo Ciklas).
+"""
 
-if not openai_api_key or not serper_api_key:
-    raise ValueError("OPENAI_API_KEY and SERPER_API_KEY must be set in the .env file.")
+# Importuojame funkcijas iš mūsų ciklų modulių
+from maintenance_cycle import run_maintenance_cycle
+from execution_cycle import run_execution_cycle
 
-# 3. Sukuriame paieškos įrankį
-# Agentai naudos šį įrankį informacijos paieškai internete
-search_tool = SerperDevTool()
+def display_menu():
+    """Spausdina vartotojo meniu."""
+    print("\n" + "="*50)
+    print("== AgentForge Valdymo Meniu ==")
+    print("="*50)
+    print("1. Vykdyti Palaikymo Ciklą (atnaujinti žinių bazę)")
+    print("2. Vykdyti Užklausos Optimizavimą (pagrindinė funkcija)")
+    print("0. Išeiti")
+    print("="*50)
 
-# 4. Apibrėžiame mūsų agentus
-# Kiekvienas agentas turi rolę, tikslą ir "biografiją" (backstory),
-# kas padeda LLM geriau suprasti jo kontekstą.
+def main():
+    """Pagrindinė programos funkcija su begaliniu meniu ciklu."""
+    while True:
+        display_menu()
+        choice = input("Pasirinkite veiksmą (Įveskite skaičių): ")
 
-# Mūsų schemos atitikmuo: Žvalgas (Researcher)
-market_researcher = Agent(
-  role='Rinkos Tyrimų Analitikas',
-  goal='Rasti naujausias ir aktualiausias AI tendencijas Lietuvoje',
-  backstory="""Esi patyręs rinkos tyrimų analitikas, dirbantis pirmaujančioje
-  technologijų įmonėje. Tavo specializacija - Vidurio ir Rytų Europos rinka,
-  ypač domiesi dirbtinio intelekto adaptacija versle.""",
-  verbose=True, # Leidžia matyti agento "minčių eigą" terminale
-  allow_delegation=False, # Šis agentas negali perduoti užduočių kitiems
-  tools=[search_tool] # Įrankiai, kuriuos agentas gali naudoti
-)
+        if choice == '1':
+            run_maintenance_cycle()
+        elif choice == '2':
+            user_prompt = input("Įveskite užklausą (prompt), kurią norite optimizuoti: ")
+            if user_prompt:
+                run_execution_cycle(user_prompt)
+            else:
+                print("Klaida: Užklausa negali būti tuščia.")
+        elif choice == '0':
+            print("Programa baigia darbą. Iki greito!")
+            break
+        else:
+            print("Klaida: Neteisingas pasirinkimas. Bandykite dar kartą.")
 
-# Mūsų schemos atitikmuo: Analitikas (panašus į Kritiką/Tobulintoją)
-tech_analyst = Agent(
-  role='Technologijų Strategijos Analitikas',
-  goal='Išanalizuoti rinkos duomenis ir suformuluoti strategines įžvalgas',
-  backstory="""Esi technologijų strategas, gebantis paversti sausus
-  rinkos duomenis į aiškias, praktiškai pritaikomas verslo strategijas.
-  Tavo tikslas - pateikti vadovybei 3 svarbiausias įžvalgas.""",
-  verbose=True,
-  allow_delegation=True # Šis agentas gali deleguoti užduotis (nors šiuo metu nėra kam)
-)
-
-# 5. Apibrėžiame užduotis agentams
-research_task = Task(
-  description="""Atlik išsamią analizę apie dirbtinio intelekto (AI)
-  pritaikymo tendencijas Lietuvos verslo sektoriuje 2024-2025 metais.
-  Identifikuok pagrindinius sektorius, kur AI taikomas aktyviausiai.""",
-  expected_output='Išsami ataskaita, apimanti ne mažiau kaip 500 žodžių, su konkrečiais pavyzdžiais ir statistika.',
-  agent=market_researcher # Šią užduotį vykdys market_researcher
-)
-
-analysis_task = Task(
-  description="""Peržiūrėk rinkos tyrimų ataskaitą apie AI tendencijas Lietuvoje.
-  Remdamasis šia ataskaita, suformuluok 3 pagrindines strategines įžvalgas
-  technologijų įmonės vadovybei. Įžvalgos turi būti aiškios, trumpos ir paremtos duomenimis.""",
-  expected_output='Trys sunumeruoti strateginių įžvalgų punktai su trumpais paaiškinimais.',
-  agent=tech_analyst, # Šią užduotį vykdys tech_analyst
-  context=[research_task] # Svarbu: šios užduoties kontekstas yra praeitos užduoties rezultatas
-)
-
-# 6. Susiejame agentus ir užduotis į Komandą (Crew)
-# Procesas gali būti 'sequential' (vienas po kito) arba 'hierarchical'
-projekt1_crew = Crew(
-  agents=[market_researcher, tech_analyst],
-  tasks=[research_task, analysis_task],
-  process=Process.sequential,
-  verbose=True # Pakeista iš '2' į 'True'
-)
-
-# 7. Paleidžiame komandos darbą!
-result = projekt1_crew.kickoff()
-
-print("\n\n########################")
-print("## Komandos darbo rezultatas:")
-print("########################\n")
-print(result)
+if __name__ == "__main__":
+    main()

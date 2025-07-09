@@ -3,28 +3,29 @@
 from crewai import Task
 from agents import researcher_agent, architect_agent
 
-# Apibrėžiame tyrimo užduotį Žvalgui
+# --- MAINTENANCE CYCLE TASKS ---
+
+# Task for the Researcher
 research_task = Task(
-    description=f"""Peržiūrėk patikimų šaltinių sąrašą faile 'source_registry.yaml'
-    naudodamas YAML Skaitymo Įrankį. Sistemingai patikrink kiekvieną 'active'
-    statusą turintį šaltinį ir surask naujausią informaciją (paskutinių 3-6 mėn.)
-    susijusią su 'prompt engineering' technikomis. Apibendrink savo radinius.""",
-    expected_output="""Struktūrizuota tekstinė ataskaita, kurioje apžvelgiamos
-    2-3 svarbiausios rastos technikos ar įžvalgos. Kiekviena įžvalga turi
-    būti trumpai aprašyta ir pateikta su nuoroda į pirminį šaltinį.""",
+    description=f"""Review the list of trusted sources in 'source_registry.yaml'
+    using the YAML Read Tool. Systematically check each source with an 'active'
+    status and find the latest information (last 3-6 months) related to
+    'prompt engineering' techniques. Summarize your findings.""",
+    expected_output="""A structured text report outlining the 2-3 most
+    important techniques or insights discovered. Each insight must be
+    briefly described and include a URL to the original source.""",
     agent=researcher_agent
 )
 
-# Apibrėžiame taisyklių kūrimo užduotį Architektui
+# Task for the Architect
 architect_task = Task(
-    description="""Išanalizuok Žvalgo pateiktą ataskaitą apie naujas technikas.
-    Pirma, išsaugok visą gautą ataskaitą į 'ziniu_baze.md' failą
-    naudodamas Failo Įrašymo Įrankį. Antra, remdamasis šia ataskaita,
-    suformuluok 3-5 universalias, aukšto lygio taisykles arba principus,
-    kuriais turėtų vadovautis kiti agentai, optimizuodami užklausas.
-    Šias taisykles įrašyk į 'kanonine_sistema.md' failą.""",
-    expected_output="""Sėkmės pranešimas, patvirtinantis, kad abu failai
-    ('ziniu_baze.md' ir 'kanonine_sistema.md') buvo sukurti/atnaujinti.""",
+    description="""Analyze the report provided by the Researcher on new techniques.
+    First, save the full report to the 'ziniu_baze.md' file using the
+    File Write Tool. Second, based on this report, formulate 3-5 universal,
+    high-level rules or principles that other agents should follow when
+    optimizing prompts. Write these rules into the 'kanonine_sistema.md' file.""",
+    expected_output="""A success message confirming that both files
+    ('ziniu_baze.md' and 'kanonine_sistema.md') have been created/updated.""",
     agent=architect_agent,
     context=[research_task]
 )

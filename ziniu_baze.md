@@ -1,15 +1,5 @@
-### Prompt Engineering Techniques: Recent Insights
+1. **A Survey of Prompt Engineering Methods in OpenAI**: This paper summarizes various prompting techniques and categorizes them based on different NLP tasks, presenting insights into their effectiveness and applicability across tasks. [Read more here](https://arxiv.org/abs/2407.12994).
 
-1. **Survey of Prompt Engineering Methods**
-   - **Link:** [A Survey of Prompt Engineering Methods in ...](https://arxiv.org/abs/2407.12994)
-   - This paper provides a comprehensive summary of various prompting techniques categorized by different NLP tasks. The authors, led by S Vatsal, analyze techniques in terms of their effectiveness and usage contexts, offering insights into how these methods can be applied to enhance model performance effectively.
+2. **Best practices for prompt engineering with the OpenAI API**: This article discusses essential principles for crafting effective prompts, including placing instructions at the prompt's beginning and iterating on responses to enhance model performance. [Read more here](https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-the-openai-api).
 
-2. **Taxonomy of Prompt Engineering Techniques**
-   - **Link:** [A Systematic Survey of Prompt Engineering Techniques](https://arxiv.org/abs/2406.06608)
-   - This work establishes a structured understanding of prompt engineering. The authors compile a taxonomy of prompting techniques, presenting a thorough analysis of their applications in various NLP tasks, thus guiding practitioners in selecting the most appropriate techniques based on their specific needs.
-
-3. **Advanced Concepts in Prompt Engineering**
-   - **Link:** [Prompt Design and Engineering: Introduction and ...](https://arxiv.org/html/2401.14423v4)
-   - This publication introduces core concepts and advanced techniques like Chain-of-Thought and Reflection. It discusses principles for building effective LLM-based agents and lays the groundwork for further innovations in prompt design, emphasizing the importance of understanding these methodologies to enhance AI interactions.
-
-These papers highlight the rapidly evolving landscape of prompt engineering, detailing both foundational and advanced techniques that are essential for leveraging large language models in AI applications.
+3. **Prompt Engineering Best Practices on Hugging Face**: This comprehensive guide covers best practices, techniques, and examples of prompt engineering in the context of transformers and large language models, providing foundational knowledge as well as advanced techniques. [Read more here](https://huggingface.co/docs/transformers/tasks/prompting).

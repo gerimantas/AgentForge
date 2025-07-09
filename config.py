@@ -21,3 +21,11 @@ if not OPENAI_API_KEY or not SERPER_API_KEY:
 # Tai yra būtina, nes CrewAI biblioteka ieško rakto būtent per os.environ.
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 os.environ["SERPER_API_KEY"] = SERPER_API_KEY
+
+# /AgentForge/config.py ... (pridėti pabaigoje)
+
+# --- SISTEMOS SAUGIKLIAI IR NUSTATYMAI ---
+
+# Maksimalus iteracijų skaičius Vykdymo Ciklui,
+# siekiant išvengti begalinių ciklų.
+MAX_ITERATIONS = 15
