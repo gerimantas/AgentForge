@@ -88,7 +88,7 @@ def detect_language_tool(text: str) -> str:
         return f"Detected language: {lang_code}"
     except Exception:
         # If detection fails, assume English
-        return "Detection failed, assuming English (en)"
+        return "Detected language: en"
 
 # --- TOOL 5: Text Translation Tool ---
 @tool("Text Translation Tool")
@@ -132,9 +132,12 @@ def load_knowledge_base_tool(filepath="ziniu_baze.yaml"):
     The tool takes one argument:
     - filepath: The path to the knowledge base YAML file.
     """
-    with open(filepath, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
-    return yaml.dump(data.get("knowledge", []))
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        return yaml.dump(data.get("knowledge", []))
+    except Exception as e:
+        return f"Error loading knowledge base: {e}"
 
 @tool("Knowledge Base Saver")
 def save_knowledge_base_tool(knowledge_yaml: str, filepath="ziniu_baze.yaml"):
@@ -158,9 +161,12 @@ def load_source_registry_tool(filepath="source_registry.yaml"):
     The tool takes one argument:
     - filepath: The path to the source registry YAML file.
     """
-    with open(filepath, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
-    return yaml.dump(data.get("sources", []))
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        return yaml.dump(data.get("sources", []))
+    except Exception as e:
+        return f"Error loading source registry: {e}"
 
 @tool("Source Registry Saver")
 def save_source_registry_tool(sources_yaml: str, filepath="source_registry.yaml"):

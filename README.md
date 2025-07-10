@@ -30,18 +30,23 @@ AgentForge – autonominių agentų sistema žinių bazės palaikymui ir užklau
 +-------------------+    +-------------------+
 |  ziniu_baze.yaml  |    | source_registry.yaml |
 +-------------------+    +-------------------+
-         |
-         v
-+-------------------+
-| kanonine_sistema.yaml |
-+-------------------+
+         |                    |
+         v                    v
++-------------------+    +-------------------+
+| kanonine_sistema.yaml |  test_system.py   |
++-------------------+    +-------------------+
+                              |
+                              v
+                         +-------------------+
+                         | test_results      |
+                         +-------------------+
 ```
 
 ---
 
 ## Projekto būsena
 
-**Dabartinė versija:** 0.2.0
+**Dabartinė versija:** 0.3.0
 **Būsena:** Vystoma
 
 Neseniai įgyvendinti pakeitimai:
@@ -49,6 +54,8 @@ Neseniai įgyvendinti pakeitimai:
 - ✅ Agentų integracija su YAML žinių baze
 - ✅ Atnaujintas dokumentacijos README
 - ✅ Funkcijų optimizavimas ir klaidų taisymas
+- ✅ Įdiegtas automatizuotas testavimo karkasas
+- ✅ Pridėta testų rezultatų kaupimo sistema
 
 ---
 
@@ -107,6 +114,21 @@ Sistema automatiškai:
 2. Pritaikys žinių bazės technikas
 3. Pateiks optimizuotą užklausą
 
+### 4. Sistemos testavimas
+
+Pasirinkite sistemos testavimo opciją:
+
+```
+> 3 (Sistemos testai)
+```
+
+Sistema:
+1. Paleis visus integracinius ir unit testus
+2. Parodys testų rezultatus
+3. Pasiūlys išsaugoti testų rezultatus:
+   - Jei testai sėkmingi - paprastai nereikia saugoti rezultatų
+   - Jei testai nepavyko - rekomenduojama išsaugoti rezultatus analizei
+
 ---
 
 ## Failų struktūra
@@ -117,10 +139,36 @@ Sistema automatiškai:
 - `agents.py` – agentų aprašymai ir logika
 - `custom_tools.py` – pagalbiniai įrankiai (failų skaitymas/rašymas, YAML, faktų tikrinimas ir kt.)
 - `config.py` – API raktai, saugikliai, konfigūracija
+- `test_system.py` – automatizuotas testavimo karkasas
 - **Duomenų failai:**
   - `ziniu_baze.yaml` – struktūrizuota žinių bazė
   - `kanonine_sistema.yaml` – žinių bazės taisyklės
   - `source_registry.yaml` – šaltinių registras
+  - `test_results/` – testavimo rezultatų katalogas
+
+---
+
+## Testavimo sistema
+
+### Automatiniai testai
+Sistemoje įdiegti šie testai:
+
+1. **Konfigūracijos testai** – tikrina, ar teisingai įkelti API raktai ir nustatymai
+2. **Kalbos aptikimo testai** – tikrina, ar sistema gali identifikuoti įvesties kalbą
+3. **Vykdymo ciklo testai** – tikrina užklausos optimizavimo funkcionalumą
+4. **YAML failų operacijų testai** – tikrina žinių bazės skaitymo/rašymo funkcijas
+
+### Testų paleidimas
+```bash
+python test_system.py
+```
+
+arba per meniu pasirinkus opciją "3".
+
+### Testų rezultatai
+- Testų rezultatai išsaugomi `test_results/` kataloge
+- Naudojama failų rotacijos sistema, kad žurnalas netaptų per didelis
+- Seni žurnalo įrašai automatiškai valomi
 
 ---
 
@@ -136,20 +184,24 @@ Sistema automatiškai:
   - crewai
   - crewai_tools
   - pyyaml
+  - python-dotenv
 - `.env` failas su API raktais:
   ```
   OPENAI_API_KEY=...
   SERPER_API_KEY=...
+  MAX_ITERATIONS=3
+  VERBOSE=True
   ```
 
 ---
 
 ## Tolimesni žingsniai
 
-- [ ] Testavimo karkaso įdiegimas
+- [x] Testavimo karkaso įdiegimas
 - [ ] Žinių bazės atvaizdavimo vartotojo sąsaja
 - [ ] Automatinė faktų patikra
 - [ ] Dinaminis maršrutizavimas ir resursų valdymas
+- [ ] CI/CD integracija su GitHub Actions
 
 ---
 
