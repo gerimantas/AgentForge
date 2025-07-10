@@ -6,6 +6,7 @@
 
 **Pradžios data:** 2025-07-10
 **Planuojama pabaigos data:** 2025-09-01
+**Atnaujinta:** 2025-07-11
 
 ## Pagrindiniai tikslai
 
@@ -32,56 +33,58 @@
 ### 1 etapas: Kategorijų sistemos sukūrimas
 - **Pradžia:** 2025-07-11
 - **Pabaiga:** 2025-07-25
-- **Statusas:** 🟡 Vykdoma
+- **Statusas:** ✅ Užbaigta
 - **Užduotys:**
   - [x] Hierarchinių kategorijų apibrėžimas YAML failuose
   - [x] Zero-shot klasifikavimo implementacija
-  - [ ] Kategorijų žymenų sistema
-  - [ ] Kategorijų sistemos testų kūrimas
+  - [x] Kategorijų žymenų sistema
+  - [x] Kategorijų sistemos testų kūrimas
 - **Pastabos:**
   - Sukurtas categories.yaml failas su hierarchine struktūra
-  - Sukurtas category_classifier.py modulis su bazine klasifikavimo logika
-  - Reikia patobulinti klasifikavimo algoritmus ir integruoti su tikru AI modeliu
+  - Sukurtas category_classifier.py modulis su klasifikavimo logika
+  - Sukurta kategorijų valdymo sistema per main.py meniu
+  - Įdiegti testai kategorijų sistemai
 
 ### 2 etapas: Dinaminės agentų sistemos sukūrimas
 - **Pradžia:** 2025-07-20
 - **Pabaiga:** 2025-08-10
-- **Statusas:** 🟡 Vykdoma
+- **Statusas:** ✅ Užbaigta
 - **Užduotys:**
   - [x] Agentų įgūdžių matricos implementacija
   - [x] Dinaminio agentų parinkimo mechanizmo kūrimas
-  - [ ] Specializuotų įskiepių sistemos kūrimas
-  - [ ] Agentų sistemos testų kūrimas
+  - [x] Specializuotų įskiepių sistemos kūrimas
+  - [x] Agentų sistemos testų kūrimas
 - **Pastabos:**
   - Sukurtas agent_skills.yaml failas su detaliais agentų aprašymais
   - Sukurtas dynamic_agents.py modulis agentų parinkimui pagal kategoriją
-  - Reikia integruoti su CrewAI framework'u
+  - Integruota su execution_cycle.py
 
 ### 3 etapas: Redagavimo ir analizės sistemos sukūrimas
 - **Pradžia:** 2025-08-10
 - **Pabaiga:** 2025-08-25
-- **Statusas:** 🔴 Nepradėta
+- **Statusas:** 🟡 Vykdoma
 - **Užduotys:**
-  - [ ] Interaktyvaus prompt redagavimo implementacija
+  - [x] Interaktyvaus prompt redagavimo implementacija
   - [ ] Redagavimo istorijos ir šablonų sistemos kūrimas
-  - [ ] Lygiagrečių modelių kvietimo implementacija
-  - [ ] Automatizuotos atsakymų kokybės analizės kūrimas
+  - [x] Lygiagrečių modelių kvietimo implementacija
+  - [x] Automatizuotos atsakymų kokybės analizės kūrimas
   - [ ] Redagavimo ir analizės sistemų testų kūrimas
 - **Pastabos:**
-  - Reikia ištirti `python-prompt-toolkit` biblioteką
-  - Reikia sukurti naujus modulius: `prompt_editor.py` ir `model_comparator.py`
+  - Įdiegta prompt_metrics.py modulis kokybės analizei
+  - Integruota kokybės analizė į execution_cycle.py
 
 ### 4 etapas: Integravimas ir optimizavimas
 - **Pradžia:** 2025-08-25
 - **Pabaiga:** 2025-09-01
-- **Statusas:** 🔴 Nepradėta
+- **Statusas:** 🟡 Vykdoma
 - **Užduotys:**
-  - [ ] Sistemų sujungimas į vieną veikiantį produktą
-  - [ ] Vartotojo sąsajos atnaujinimas
+  - [x] Sistemų sujungimas į vieną veikiantį produktą
+  - [x] Vartotojo sąsajos atnaujinimas
   - [ ] Optimizavimas ir klaidų taisymas
   - [ ] Galutinių integracinių testų kūrimas
 - **Pastabos:**
-  - Reikia atnaujinti `main.py` su naujomis meniu opcijomis
+  - Atnaujintas main.py su naujomis meniu opcijomis
+  - Sukurta kategorijų valdymo submeniu sistema
 
 ## Kategorijų sistema
 

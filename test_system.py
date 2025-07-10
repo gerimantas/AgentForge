@@ -174,6 +174,60 @@ class AgentForgeTestCase(unittest.TestCase):
             if os.path.exists(test_file):
                 os.remove(test_file)
 
+class CategorySystemTestCase(unittest.TestCase):
+    """Testai kategorijų sistemai."""
+    
+    def test_category_loading(self):
+        """Testuoja kategorijų įkėlimą iš YAML failo."""
+        from categories import load_categories
+        categories = load_categories()
+        
+        # Tikriname, ar įkeltos pagrindinės kategorijos
+        self.assertIn("categories", categories)
+        self.assertIn("information_retrieval", categories["categories"])
+        self.assertIn("creative_content", categories["categories"])
+        self.assertIn("analysis", categories["categories"])
+        self.assertIn("development", categories["categories"])
+    
+    def test_category_classification(self):
+        """Testuoja užklausų klasifikaciją į kategorijas."""
+        from category_classifier import get_query_category
+        
+        # Testuojame su keliomis užklausomis
+        test_cases = [
+            ("Find information about quantum computing", "information_retrieval"),
+            ("Write a story about a robot", "creative_content"),
+            ("Analyze this data set", "analysis"),
+            ("Debug my Python function", "development")
+        ]
+        
+        for prompt, expected_category in test_cases:
+            result = get_query_category(prompt)
+            self.assertEqual(result["main_category"], expected_category)
+
+class AgentSkillsTestCase(unittest.TestCase):
+    """Testai agentų įgūdžių sistemai."""
+    
+    def test_agent_skills_loading(self):
+        """Testuoja agentų įgūdžių įkėlimą iš YAML failo."""
+        from agent_skills import load_agent_skills
+        skills = load_agent_skills()
+        
+        # Tikriname, ar įkelti agentų duomenys
+        self.assertIn("agents", skills)
+        self.assertIn("prompt_analyst", skills["agents"])
+        self.assertIn("skills", skills["agents"]["prompt_analyst"])
+    
+    def test_best_agents_selection(self):
+        """Testuoja geriausių agentų parinkimą pagal kategoriją."""
+        from agent_skills import get_best_agents_for_category
+        
+        # Tikriname, ar kiekvienai kategorijai parenkamas bent vienas agentas
+        for category in ["information_retrieval", "creative_content", "analysis", "development"]:
+            agents = get_best_agents_for_category(category, count=1)
+            self.assertGreaterEqual(len(agents), 1)
+
+# Atnaujinkime run_tests() funkciją, kad įtrauktų naujus testus
 def run_tests():
     """Paleidžia visus testus ir sprendžia dėl rezultatų išsaugojimo"""
     # Sukuriame laiko žymą
@@ -181,7 +235,11 @@ def run_tests():
     
     # Sukuriame test suite objektą
     loader = unittest.TestLoader()
-    test_suite = loader.loadTestsFromTestCase(AgentForgeTestCase)
+    test_suite = unittest.TestSuite([
+        loader.loadTestsFromTestCase(AgentForgeTestCase),
+        loader.loadTestsFromTestCase(CategorySystemTestCase),
+        loader.loadTestsFromTestCase(AgentSkillsTestCase)
+    ])
     
     # Sukuriame string buffer, kad galėtume sugauti testų rezultatus
     test_output = io.StringIO()

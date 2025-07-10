@@ -512,3 +512,71 @@ Klaidų: 0
 
 ================================================================================
 
+2025-07-10 18:03:22,385 - Testų rezultatai (2025-07-10 18:03:00)
+=== AgentForge Testų Rezultatai (2025-07-10 18:03:00) ===
+test_config_loading (__main__.AgentForgeTestCase.test_config_loading)
+Testuoja ar konfigūracija tinkamai įkraunama. ... ok
+test_execution_cycle (__main__.AgentForgeTestCase.test_execution_cycle)
+Testuoja užklausos vykdymo ciklą. ... ### Pradedamas Užklausos Optimizavimo Vykdymo Ciklas... ###
+### Tai gali užtrukti kelias minutes... ###
+--- Aptikta pradinė kalba: en ---
+
+===== Query Classification =====
+Query: Test prompt
+Main Category: Information Retrieval (information_retrieval)
+Subcategory: Search (search)
+Confidence: 0.0%
+===============================
+
+
+
+==================================================
+|| Initial User Prompt:
+==================================================
+Test prompt
+
+
+==================================================
+|| Final Optimized Prompt (in English):
+==================================================
+Optimized prompt content
+==================================================
+
+===== Prompt Quality Evaluation =====
+Clarity        : ████████████████ 80.0/100
+Specificity    : ██████████ 50.0/100
+Context        : ██████████ 50.0/100
+Structure      : ██████████ 50.0/100
+Outcome Clarity: ████████ 40.0/100
+OVERALL        : ███████████ 55.5/100
+
+Word Count: 3
+===================================
+
+ok
+test_language_detection (__main__.AgentForgeTestCase.test_language_detection)
+Testuoja kalbos aptikimo funkcionalumą. ... ok
+test_yaml_file_operations (__main__.AgentForgeTestCase.test_yaml_file_operations)
+Testuoja YAML failų operacijas. ... ok
+test_category_classification (__main__.CategorySystemTestCase.test_category_classification)
+Testuoja užklausų klasifikaciją į kategorijas. ... ok
+test_category_loading (__main__.CategorySystemTestCase.test_category_loading)
+Testuoja kategorijų įkėlimą iš YAML failo. ... ok
+test_agent_skills_loading (__main__.AgentSkillsTestCase.test_agent_skills_loading)
+Testuoja agentų įgūdžių įkėlimą iš YAML failo. ... ok
+test_best_agents_selection (__main__.AgentSkillsTestCase.test_best_agents_selection)
+Testuoja geriausių agentų parinkimą pagal kategoriją. ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 6.405s
+
+OK
+
+=== Testavimo rezultatų santrauka ===
+Testų vykdyta: 8
+Sėkmingų: 8
+Nesėkmingų: 0
+Klaidų: 0
+
+================================================================================
+
