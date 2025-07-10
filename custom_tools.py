@@ -1,6 +1,7 @@
 # /AgentForge/custom_tools.py
 
 import yaml
+from langdetect import detect
 from crewai.tools import tool
 from crewai import Agent, Task, Crew
 from crewai_tools import SerperDevTool
@@ -73,59 +74,48 @@ def fact_checker_tool(statement: str) -> str:
 
     result = temp_crew.kickoff()
     return result
-# /AgentForge/custom_tools.py ... (pridėti pabaigoje)
 
-from langdetect import detect
-
-# ... (ankstesnių įrankių kodas) ...
-
-
-# --- ĮRANKIS NR. 4: Kalbos Atpažinimas ---
-# Šiam įrankiui nereikia @tool dekoratoriaus, nes jį naudosime tiesiogiai
-# Python kode, o ne per agentą.
-def detect_language(text: str) -> str:
-    """Nustato teksto kalbos kodą (pvz., 'en', 'lt')."""
+# --- TOOL 4: Language Detection Tool ---
+@tool("Language Detection Tool")
+def detect_language_tool(text: str) -> str:
+    """Use this tool to detect the language of a given text.
+    The tool takes one argument:
+    - text: The text content to analyze.
+    Returns the detected language code (e.g., 'en', 'lt').
+    """
     try:
         lang_code = detect(text)
-        return lang_code
-    except:
-        # Jei nepavyksta nustatyti, darome prielaidą, kad tai anglų k.
-        return "en"
+        return f"Detected language: {lang_code}"
+    except Exception:
+        # If detection fails, assume English
+        return "Detection failed, assuming English (en)"
 
-
-# --- ĮRANKIS NR. 5: Teksto Vertimas ---
-# Sukuriame specializuotą įrankį, kuris veiks kaip vertimo paslauga.
-@tool("Teksto Vertimo Įrankis")
+# --- TOOL 5: Text Translation Tool ---
+@tool("Text Translation Tool")
 def translate_text_tool(text_to_translate: str, target_language: str) -> str:
-    """Naudok šį įrankį, kad išverstum tekstą į nurodytą kalbą.
-    Įrankis priima du argumentus:
-    - text_to_translate: tekstas, kurį reikia išversti.
-    - target_language: kalba, į kurią reikia versti (pvz., 'Lithuanian').
+    """Use this tool to translate text into the specified language.
+    Arguments:
+    - text_to_translate: the text to translate.
+    - target_language: the target language (e.g., 'Lithuanian').
     """
-    # Sukuriame laikiną vertėjo agentą
     translator_agent = Agent(
-        role="Profesionalus Vertėjas",
-        goal=f"Tiksliai ir natūraliai išversti pateiktą tekstą į {target_language} kalbą.",
-        backstory="""Esi patyręs lingvistas ir vertėjas, puikiai išmanantis
-        tiek šaltinio, tiek tikslo kalbos niuansus. Tavo tikslas - ne pažodinis
-        vertimas, o sklandus, idiomatiškas ir kontekstą atitinkantis tekstas.""",
+        role="Professional Translator",
+        goal=f"Accurately and naturally translate the given text into {target_language}.",
+        backstory="""You are an experienced linguist and translator, well-versed in both the source and target languages. Your goal is to produce fluent, idiomatic, and contextually appropriate translations.""",
         verbose=False,
         allow_delegation=False,
-        # Vertėjui nereikia specifinių įrankių
         tools=[]
     )
 
-    # Sukuriame laikiną užduotį šiam agentui
     translation_task = Task(
-        description=f"""Išversk šį tekstą į {target_language} kalbą:
+        description=f"""Translate this text into {target_language}:
         ---
         {text_to_translate}
         ---""",
-        expected_output="Išverstas tekstas.",
+        expected_output="Translated text.",
         agent=translator_agent
     )
 
-    # Sukuriame laikiną komandą ir ją paleidžiame
     temp_crew = Crew(
         agents=[translator_agent],
         tasks=[translation_task],
@@ -134,3 +124,78 @@ def translate_text_tool(text_to_translate: str, target_language: str) -> str:
 
     translated_result = temp_crew.kickoff()
     return translated_result
+
+# --- TOOL 6: Knowledge Base Tools ---
+@tool("Knowledge Base Loader")
+def load_knowledge_base_tool(filepath="ziniu_baze.yaml"):
+    """Use this tool to load the knowledge base from a YAML file.
+    The tool takes one argument:
+    - filepath: The path to the knowledge base YAML file.
+    """
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return yaml.dump(data.get("knowledge", []))
+
+@tool("Knowledge Base Saver")
+def save_knowledge_base_tool(knowledge_yaml: str, filepath="ziniu_baze.yaml"):
+    """Use this tool to save the knowledge base to a YAML file.
+    The tool takes two arguments:
+    - knowledge_yaml: The YAML string representation of the knowledge.
+    - filepath: The path to the knowledge base YAML file.
+    """
+    try:
+        knowledge = yaml.safe_load(knowledge_yaml)
+        with open(filepath, "w", encoding="utf-8") as f:
+            yaml.safe_dump({"knowledge": knowledge}, f, allow_unicode=True)
+        return f"Knowledge base successfully saved at: {filepath}"
+    except Exception as e:
+        return f"Error saving knowledge base: {e}"
+
+# --- TOOL 7: Source Registry Tools ---
+@tool("Source Registry Loader")
+def load_source_registry_tool(filepath="source_registry.yaml"):
+    """Use this tool to load the source registry from a YAML file.
+    The tool takes one argument:
+    - filepath: The path to the source registry YAML file.
+    """
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return yaml.dump(data.get("sources", []))
+
+@tool("Source Registry Saver")
+def save_source_registry_tool(sources_yaml: str, filepath="source_registry.yaml"):
+    """Use this tool to save the source registry to a YAML file.
+    The tool takes two arguments:
+    - sources_yaml: The YAML string representation of the sources.
+    - filepath: The path to the source registry YAML file.
+    """
+    try:
+        sources = yaml.safe_load(sources_yaml)
+        with open(filepath, "w", encoding="utf-8") as f:
+            yaml.safe_dump({"sources": sources}, f, allow_unicode=True)
+        return f"Source registry successfully saved at: {filepath}"
+    except Exception as e:
+        return f"Error saving source registry: {e}"
+
+# Helper functions for internal use (not exposed as tools)
+def load_knowledge_base(filepath="ziniu_baze.yaml"):
+    """Load the knowledge base from a YAML file as a Python list."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return data.get("knowledge", [])
+
+def save_knowledge_base(knowledge, filepath="ziniu_baze.yaml"):
+    """Save the knowledge base (list of dicts) to a YAML file."""
+    with open(filepath, "w", encoding="utf-8") as f:
+        yaml.safe_dump({"knowledge": knowledge}, f, allow_unicode=True)
+
+def load_source_registry(filepath="source_registry.yaml"):
+    """Load the source registry from a YAML file as a Python list."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return data.get("sources", [])
+
+def save_source_registry(sources, filepath="source_registry.yaml"):
+    """Save the source registry (list of dicts) to a YAML file."""
+    with open(filepath, "w", encoding="utf-8") as f:
+        yaml.safe_dump({"sources": sources}, f, allow_unicode=True)

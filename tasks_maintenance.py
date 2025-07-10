@@ -3,14 +3,15 @@
 from crewai import Task
 # Importuojame MŪSŲ naujus Palaikymo Ciklo agentus
 from agents import researcher_agent, synthesizer_agent, rule_engineer_agent
+# Importuojame naujas YAML žinių bazės ir šaltinių registro funkcijas
+from custom_tools import load_knowledge_base_tool, save_knowledge_base_tool, load_source_registry_tool
 
 # --- MAINTENANCE CYCLE TASKS (NEW 3-STEP LOGIC) ---
 
-# Užduotis Nr. 1: Tyrimas (lieka panaši, bet dabar rezultatas keliauja toliau)
+# Užduotis Nr. 1: Tyrimas (atnaujinta naudoti load_source_registry_tool)
 research_task = Task(
-    description=f"""Review the list of trusted sources in 'source_registry.yaml'
-    using the YAML Read Tool. Systematically check each 'active'
-    status source and find the latest information (last 3-6 months)
+    description=f"""Review the list of trusted sources using the Source Registry Loader tool.
+    Systematically check each 'active' status source and find the latest information (last 3-6 months)
     related to 'prompt engineering' techniques. Summarize your findings.""",
     expected_output="""A structured text report outlining the 2-3 most
     important techniques or insights discovered. Each insight must be
@@ -18,24 +19,21 @@ research_task = Task(
     agent=researcher_agent
 )
 
-# Užduotis Nr. 2: Sintezė (nauja)
+# Užduotis Nr. 2: Sintezė (atnaujinta naudoti Knowledge Base tools)
 synthesis_task = Task(
-    description="""Analyze the report provided by the Researcher. First, save
-    the full raw report to 'ziniu_baze.md' using the File Write Tool for
-    archival purposes. Second, synthesize the key findings into a single,
-    concise, and actionable strategic insight. This insight should explain
-    a new technique or principle in simple terms.""",
-    expected_output="""A short, human-readable summary of a single strategic
-    insight, ready to be passed to the Rule Engineer. For example:
-    'A new technique called "Step-Back Prompting" has emerged. It involves
-    asking the LLM to first take a step back and think about the broader
-    concepts and principles before tackling the specific question, which
-    improves reasoning in complex scenarios.'""",
+    description="""Analyze the report provided by the Researcher. First, load 
+    the current knowledge base using the Knowledge Base Loader tool.
+    Then, synthesize the key findings into structured knowledge entries.
+    Each entry should have topic, fact, source, and verified fields.
+    Finally, save the updated knowledge base using the Knowledge Base Saver tool.""",
+    expected_output="""A confirmation that the knowledge base has been successfully
+    updated with the new entries, and a short human-readable summary of the 
+    strategic insights added.""",
     agent=synthesizer_agent,
     context=[research_task]
 )
 
-# Užduotis Nr. 3: Taisyklės Inžinerija (nauja)
+# Užduotis Nr. 3: Taisyklės Inžinerija (paliekama beveik nepakeista)
 rule_engineering_task = Task(
     description="""Take the strategic insight provided by the Synthesizer and
     convert it into a new, valid rule for our system. You MUST:

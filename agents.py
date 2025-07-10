@@ -2,7 +2,7 @@
 
 from crewai import Agent
 from crewai_tools import SerperDevTool
-from custom_tools import file_write_tool, yaml_read_tool, fact_checker_tool
+from custom_tools import file_write_tool, yaml_read_tool, fact_checker_tool, load_knowledge_base, save_knowledge_base, load_source_registry
 
 # ==============================================================================
 #  MAINTENANCE CYCLE AGENTS
@@ -113,3 +113,32 @@ prompt_refiner = Agent(
     allow_delegation=False,
     tools=[fact_checker_tool]
 )
+
+# Pavyzdys: agentas, kuris tikrina faktą žinių bazėje
+def fact_check_agent(fact: str) -> bool:
+    knowledge = load_knowledge_base()
+    for entry in knowledge:
+        if fact.lower() in entry["fact"].lower():
+            return True
+    return False
+
+# Pavyzdys: agentas, kuris tikrina ar šaltinis patikimas
+def is_source_trusted(url: str) -> bool:
+    sources = load_source_registry()
+    for source in sources:
+        if url in source["url"] and source["status"] == "active":
+            return True
+    return False
+
+# Pavyzdys: agentas, kuris prideda naują žinią
+def add_knowledge_entry(topic, fact, source, verified=True, notes=""):
+    knowledge = load_knowledge_base()
+    knowledge.append({
+        "topic": topic,
+        "fact": fact,
+        "source": source,
+        "verified": verified,
+        "notes": notes
+    })
+    save_knowledge_base(knowledge)
+    return True

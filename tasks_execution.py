@@ -3,6 +3,8 @@
 from textwrap import dedent
 from crewai import Task
 from agents import prompt_analyst, prompt_critic, prompt_refiner
+# Importuokite naujas funkcijas
+from custom_tools import load_knowledge_base_tool
 
 # --- EXECUTION CYCLE TASKS ---
 
@@ -39,7 +41,6 @@ critique_task = Task(
     context=[analysis_task]
 )
 
-# === PATAISYMAS ČIA ===
 # Task for the Prompt Refiner (ATNAUJINTOS instrukcijos)
 refinement_task = Task(
     description=dedent("""
@@ -61,3 +62,30 @@ refinement_task = Task(
     agent=prompt_refiner,
     context=[analysis_task, critique_task]
 )
+
+# Funkcija, kuri priima user_prompt parametrą
+def create_knowledge_analysis_task(raw_prompt):
+    """Create a task that uses the knowledge base to analyze a user prompt.
+    
+    Args:
+        raw_prompt: The original prompt from the user
+        
+    Returns:
+        A Task object
+    """
+    return Task(
+        description=f"""Analyze the user's prompt: '{raw_prompt}'.
+        First, load the knowledge base using the Knowledge Base Loader tool to understand
+        what techniques we have information about.
+        Then, identify which prompt engineering techniques would be most relevant for optimizing
+        this user's request. Consider the intent, complexity, and specific requirements.""",
+        expected_output="""A clear analysis identifying:
+        1. The user's primary intent or goal
+        2. The 2-3 most relevant prompt engineering techniques from our knowledge base
+        3. Justification for why these techniques would help optimize the prompt""",
+        agent=prompt_analyst  # Naudojame esamą prompt_analyst vietoj nedefinuoto analyzer_agent
+    )
+
+# Užrašas, kad ši funkcija turi būti kviečiama su konkrečia užklausa
+# Pavyzdys: 
+# knowledge_analysis_task = create_knowledge_analysis_task("Padėk man parašyti CV")
