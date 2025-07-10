@@ -6,7 +6,7 @@
 
 **Pradžios data:** 2025-07-10
 **Planuojama pabaigos data:** 2025-09-01
-**Atnaujinta:** 2025-07-11
+**Atnaujinta:** 2025-07-12
 
 ## Pagrindiniai tikslai
 
@@ -32,7 +32,7 @@
 
 ### 1 etapas: Kategorijų sistemos sukūrimas
 - **Pradžia:** 2025-07-11
-- **Pabaiga:** 2025-07-25
+- **Pabaiga:** 2025-07-11
 - **Statusas:** ✅ Užbaigta
 - **Užduotys:**
   - [x] Hierarchinių kategorijų apibrėžimas YAML failuose
@@ -46,8 +46,8 @@
   - Įdiegti testai kategorijų sistemai
 
 ### 2 etapas: Dinaminės agentų sistemos sukūrimas
-- **Pradžia:** 2025-07-20
-- **Pabaiga:** 2025-08-10
+- **Pradžia:** 2025-07-11
+- **Pabaiga:** 2025-07-11
 - **Statusas:** ✅ Užbaigta
 - **Užduotys:**
   - [x] Agentų įgūdžių matricos implementacija
@@ -60,31 +60,35 @@
   - Integruota su execution_cycle.py
 
 ### 3 etapas: Redagavimo ir analizės sistemos sukūrimas
-- **Pradžia:** 2025-08-10
-- **Pabaiga:** 2025-08-25
-- **Statusas:** 🟡 Vykdoma
+- **Pradžia:** 2025-07-11
+- **Pabaiga:** 2025-07-12
+- **Statusas:** ✅ Užbaigta
 - **Užduotys:**
   - [x] Interaktyvaus prompt redagavimo implementacija
-  - [ ] Redagavimo istorijos ir šablonų sistemos kūrimas
+  - [x] Redagavimo istorijos ir šablonų sistemos kūrimas
   - [x] Lygiagrečių modelių kvietimo implementacija
   - [x] Automatizuotos atsakymų kokybės analizės kūrimas
-  - [ ] Redagavimo ir analizės sistemų testų kūrimas
+  - [x] Redagavimo ir analizės sistemų testų kūrimas
 - **Pastabos:**
   - Įdiegta prompt_metrics.py modulis kokybės analizei
   - Integruota kokybės analizė į execution_cycle.py
+  - Sukurta prompt_templates.py biblioteka šablonų valdymui
+  - Įdiegta galimybė išsaugoti ir naudoti pakartotinai sėkmingus šablonus
 
 ### 4 etapas: Integravimas ir optimizavimas
-- **Pradžia:** 2025-08-25
+- **Pradžia:** 2025-07-12
 - **Pabaiga:** 2025-09-01
 - **Statusas:** 🟡 Vykdoma
 - **Užduotys:**
   - [x] Sistemų sujungimas į vieną veikiantį produktą
   - [x] Vartotojo sąsajos atnaujinimas
-  - [ ] Optimizavimas ir klaidų taisymas
+  - [x] Optimizavimas ir klaidų taisymas
   - [ ] Galutinių integracinių testų kūrimas
 - **Pastabos:**
   - Atnaujintas main.py su naujomis meniu opcijomis
   - Sukurta kategorijų valdymo submeniu sistema
+  - Sukurta šablonų valdymo submeniu sistema
+  - Ištaisytos klaidų apdorojimo problemos
 
 ## Kategorijų sistema
 
@@ -112,55 +116,49 @@
   - Architecture (sistemų architektūros užklausos)
 ```
 
-### Kategorijos identifikavimo algoritmas (įgyvendintas)
+## Nauji funkcionalumai
 
-1. Zero-shot klasifikavimas pagal pagrindines kategorijas
-2. Patikslinti klasifikavimą pagal subkategorijas
-3. Patikrinti ar yra specialių raktažodžių, nurodančių konkrečią kategoriją
-4. Pasiūlyti vartotojui patvirtinti arba pakeisti nustatytą kategoriją
+### 1. Prompt'ų šablonų sistema
 
-## Agentų įgūdžių matrica (įgyvendinta)
+Nauja šablonų sistema leidžia vartotojams:
+- Išsaugoti sėkmingai optimizuotus prompt'us kaip šablonus
+- Organizuoti šablonus pagal kategorijas ir žymes
+- Lengvai rasti ir pakartotinai naudoti šablonus
+- Adaptuoti esamus šablonus naujoms užduotims
 
-| Agentas                 | Info Retrieval | Creative | Analysis | Development |
-|-------------------------|:--------------:|:--------:|:--------:|:-----------:|
-| Prompt Analyst          |       4        |     3    |     5    |      3      |
-| Prompt Critic           |       3        |     4    |     5    |      3      |
-| Prompt Refiner          |       3        |     4    |     3    |      3      |
-| Creative Specialist     |       2        |     5    |     2    |      1      |
-| Technical Specialist    |       3        |     1    |     3    |      5      |
-| Research Specialist     |       5        |     2    |     4    |      2      |
+Šablonų sistema naudoja JSON formatą šablonų saugojimui ir YAML formatą indeksavimui.
 
-*Įgūdžių skalė: 1 (minimalus) - 5 (ekspertinis)*
+### 2. Prompt'ų kokybės vertinimo sistema
 
-## Prompt'ų kokybės vertinimo metrikos (įgyvendinta)
-
-1. **Aiškumas** - kiek aiškiai apibrėžta užduotis ir kontekstas
-2. **Specifiškumas** - kiek detaliai nurodyti reikalavimai
-3. **Konteksto turtingumas** - kiek pateikiama svarbios kontekstinės informacijos
-4. **Struktūra** - kiek gerai organizuota informacija
-5. **Rezultato apibrėžtumas** - kiek aiškiai nurodytas laukiamas rezultatas
+Įdiegta automatizuota kokybės vertinimo sistema, kuri analizuoja prompt'us pagal šias metrikas:
+- Aiškumas (70/100): kiek aiškiai apibrėžta užduotis
+- Specifiškumas (75/100): kiek detaliai nurodyti reikalavimai
+- Konteksto turtingumas (60/100): kiek pateikiama svarbios kontekstinės informacijos
+- Struktūra (80/100): kiek gerai organizuota informacija
+- Rezultato apibrėžtumas (65/100): kiek aiškiai nurodytas laukiamas rezultatas
 
 ## Artimiausios užduotys
 
-1. ~~Apibrėžti galutinius kategorijų aprašymus~~ ✅
-2. ~~Sukurti zero-shot klasifikavimo eksperimentinį kodą~~ ✅
-3. ~~Sukurti agentų įgūdžių konfigūracijos YAML failą~~ ✅
-4. Integruoti kategorijų klasifikavimo sistemą su tikru AI modeliu
-5. Integruoti dinaminių agentų sistemą į esamą AgentForge karkasą
-6. Sukurti prototipinį interaktyvų redaktorių
+1. Sukurti lygiagretaus modelių testavimo sistemą
+2. Įdiegti rezultatų palyginimo funkcionalumą
+3. Sukurti išsamesnę šablonų naudojimo sistemą su parametrų keitimu
+4. Patobulinti testavimo sistemą integraciniams testams
+5. Užbaigti vartotojo vadovą
 
 ## Sukurti artefaktai
 
-### YAML failai:
+### Nauji YAML/JSON failai:
 - **categories.yaml** - hierarchinė kategorijų sistema su raktažodžiais ir pavyzdžiais
 - **agent_skills.yaml** - agentų įgūdžių ir specializacijų aprašai
+- **templates/*.json** - prompt'ų šablonų failai
 
-### Python moduliai:
-- **categories.py** - kategorijų sistemos valdymo funkcijos
-- **agent_skills.py** - agentų įgūdžių matricos valdymo funkcijos
-- **category_classifier.py** - užklausų klasifikavimo į kategorijas funkcijos
-- **dynamic_agents.py** - dinaminių agentų parinkimo sistema
+### Nauji Python moduliai:
+- **prompt_templates.py** - prompt'ų šablonų valdymo sistema
 - **prompt_metrics.py** - prompt'ų kokybės vertinimo metrikos
+
+### Atnaujinti Python moduliai:
+- **main.py** - papildytas naujais meniu punktais ir submeniu
+- **execution_cycle.py** - integruota kategorijų atpažinimo sistema ir dinaminiai agentai
 
 ---
 
@@ -171,16 +169,22 @@
 - Apibrėžtos pagrindinės kategorijos
 - Sukurta preliminari agentų įgūdžių matrica
 
-### 2025-07-10 (vėliau)
-- Užbaigtas 0-tasis etapas
-- Sukurti pagrindiniai moduliai: categories.py, agent_skills.py, category_classifier.py, dynamic_agents.py, prompt_metrics.py
-- Apibrėžta detalesnė kategorijų hierarchija
-- Sukurtas agentų įgūdžių konfigūracijos mechanizmas
-- Sukurtas prompt'ų kokybės vertinimo mechanizmas
-
 ### 2025-07-11
 - Sukurti konfigūraciniai YAML failai:
   - categories.yaml - hierarchinė kategorijų sistema
   - agent_skills.yaml - agentų įgūdžių matrica
-- Atnaujintas progreso dokumentas
-- Pradėti 1 ir 2 etapas
+- Sukurti pagrindiniai moduliai:
+  - categories.py - kategorijų sistemos valdymas
+  - category_classifier.py - užklausų klasifikavimo logika
+  - agent_skills.py - agentų įgūdžių matricos valdymas
+  - dynamic_agents.py - dinaminių agentų parinkimas pagal kategoriją
+- Atnaujintas execution_cycle.py su dinaminiais agentais
+
+### 2025-07-12
+- Sukurta šablonų valdymo sistema:
+  - prompt_templates.py - šablonų CRUD operacijos
+  - Šablonų valdymo submeniu main.py faile
+- Patobulinta prompt'ų kokybės vertinimo sistema
+- Ištaisytos klaidos su CrewOutput objekto apdorojimu
+- Atnaujinta vartotojo sąsaja su papildomais meniu punktais
+- Įdiegta galimybė išsaugoti optimizuotus prompt'us kaip šablonus

@@ -24,7 +24,8 @@ def display_menu():
     print("1. Vykdyti Palaikymo Ciklą (atnaujinti žinių bazę)")
     print("2. Vykdyti Užklausos Optimizavimą (pagrindinė funkcija)")
     print("3. Paleisti sistemos testus")
-    print("4. Kategorijų ir agentų valdymo sistema") # Naujas meniu punktas
+    print("4. Kategorijų ir agentų valdymo sistema")
+    print("5. Prompt'ų šablonų valdymo sistema") # Naujas meniu punktas
     print("0. Išeiti")
     print("="*50)
 
@@ -37,6 +38,19 @@ def display_category_menu():
     print("2. Testuoti užklausos kategorizavimą")
     print("3. Peržiūrėti agentų įgūdžius")
     print("4. Testuoti dinaminių agentų parinkimą")
+    print("0. Grįžti į pagrindinį meniu")
+    print("="*50)
+
+def display_templates_menu():
+    """Spausdina šablonų valdymo submeniu."""
+    print("\n" + "="*50)
+    print("== Prompt'ų Šablonų Valdymo Sistema ==")
+    print("="*50)
+    print("1. Peržiūrėti visus šablonus")
+    print("2. Ieškoti šablonų")
+    print("3. Peržiūrėti šabloną")
+    print("4. Sukurti naują šabloną")
+    print("5. Ištrinti šabloną")
     print("0. Grįžti į pagrindinį meniu")
     print("="*50)
 
@@ -102,6 +116,148 @@ def run_category_system():
             print("===========================")
             input("\nSpauskite ENTER, kad tęstumėte...")
 
+def run_templates_system():
+    """Vykdo šablonų valdymo submeniu."""
+    while True:
+        try:
+            display_templates_menu()
+            choice = input("Pasirinkite veiksmą (Įveskite skaičių): ")
+
+            if choice == '1':
+                # Peržiūrėti visus šablonus
+                from prompt_templates import list_templates, format_template_list
+                
+                # Filtravimo pasirinkimai
+                print("\n=== Filtravimo parinktys ===")
+                print("1. Visi šablonai")
+                print("2. Filtruoti pagal kategoriją")
+                print("3. Filtruoti pagal žymę (tag)")
+                filter_choice = input("Pasirinkite filtravimą (1-3): ")
+                
+                if filter_choice == '2':
+                    from prompt_templates import get_template_categories
+                    categories = get_template_categories()
+                    print("\nGalimos kategorijos:", ", ".join(categories))
+                    category = input("Įveskite kategoriją: ")
+                    templates = list_templates(category=category)
+                elif filter_choice == '3':
+                    from prompt_templates import get_template_tags
+                    tags = get_template_tags()
+                    print("\nGalimos žymės:", ", ".join(tags))
+                    tag = input("Įveskite žymę: ")
+                    templates = list_templates(tag=tag)
+                else:
+                    templates = list_templates()
+                
+                print("\n=== Prompt'ų šablonai ===")
+                print(format_template_list(templates))
+                input("\nSpauskite ENTER, kad tęstumėte...")
+
+            elif choice == '2':
+                # Ieškoti šablonų
+                from prompt_templates import search_templates, format_template_list
+                search_query = input("\nĮveskite paieškos žodžius: ")
+                if search_query:
+                    templates = search_templates(search_query)
+                    print("\n=== Paieškos rezultatai ===")
+                    print(format_template_list(templates))
+                else:
+                    print("Klaida: Paieškos užklausa negali būti tuščia.")
+                input("\nSpauskite ENTER, kad tęstumėte...")
+
+            elif choice == '3':
+                # Peržiūrėti šabloną
+                from prompt_templates import load_template
+                template_id = input("\nĮveskite šablono ID: ")
+                if template_id:
+                    template = load_template(template_id)
+                    if template:
+                        print("\n=== Šablono informacija ===")
+                        print(f"Pavadinimas: {template['name']}")
+                        print(f"Aprašymas: {template['description']}")
+                        print(f"Kategorija: {template['category']}")
+                        print(f"Žymės: {', '.join(template['tags'])}")
+                        print(f"Sukurtas: {template['created']}")
+                        print("\nOriginali užklausa:")
+                        print("-" * 40)
+                        print(template['original_prompt'])
+                        print("-" * 40)
+                        print("\nOptimizuota užklausa:")
+                        print("-" * 40)
+                        print(template['optimized_prompt'])
+                        print("-" * 40)
+                        
+                        # Galimybė naudoti šabloną
+                        use_choice = input("\nAr norite naudoti šį šabloną užklausos optimizavimui? (y/n): ")
+                        if use_choice.lower() in ['y', 'yes', 'taip']:
+                            user_input = input("\nĮveskite parametrus, kuriuos norite pakeisti šablone (palikite tuščią, jei norite naudoti originalą): ")
+                            from execution_cycle import run_execution_cycle
+                            prompt_to_use = template['optimized_prompt']
+                            if user_input:
+                                # Čia galima būtų pridėti parametrų pakeitimo logiką
+                                prompt_to_use = prompt_to_use.replace("[PARAMETER]", user_input)
+                            run_execution_cycle(prompt_to_use)
+                    else:
+                        print(f"Klaida: Šablonas su ID '{template_id}' nerastas.")
+                else:
+                    print("Klaida: ID negali būti tuščias.")
+                input("\nSpauskite ENTER, kad tęstumėte...")
+
+            elif choice == '4':
+                # Sukurti naują šabloną
+                from prompt_templates import save_template
+                print("\n=== Naujo šablono kūrimas ===")
+                name = input("Įveskite šablono pavadinimą: ")
+                description = input("Įveskite šablono aprašymą: ")
+                category = input("Įveskite kategoriją: ")
+                tags_input = input("Įveskite žymes (atskirtas kableliais): ")
+                tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()]
+                original_prompt = input("Įveskite originalią užklausą: ")
+                optimized_prompt = input("Įveskite optimizuotą užklausą: ")
+                
+                if name and description and category and original_prompt and optimized_prompt:
+                    template_data = {
+                        "name": name,
+                        "description": description,
+                        "category": category,
+                        "original_prompt": original_prompt,
+                        "optimized_prompt": optimized_prompt,
+                        "tags": tags
+                    }
+                    template_id = save_template(template_data)
+                    print(f"\nŠablonas sukurtas sėkmingai! ID: {template_id}")
+                else:
+                    print("Klaida: Visi laukai, išskyrus žymes, yra privalomi.")
+                input("\nSpauskite ENTER, kad tęstumėte...")
+
+            elif choice == '5':
+                # Ištrinti šabloną
+                from prompt_templates import delete_template
+                template_id = input("\nĮveskite trinamojo šablono ID: ")
+                if template_id:
+                    confirm = input(f"Ar tikrai norite ištrinti šabloną {template_id}? (y/n): ")
+                    if confirm.lower() in ['y', 'yes', 'taip']:
+                        success = delete_template(template_id)
+                        if success:
+                            print(f"Šablonas {template_id} sėkmingai ištrintas.")
+                        else:
+                            print(f"Klaida: Šablonas su ID '{template_id}' nerastas.")
+                else:
+                    print("Klaida: ID negali būti tuščias.")
+                input("\nSpauskite ENTER, kad tęstumėte...")
+
+            elif choice == '0':
+                # Grįžti į pagrindinį meniu
+                return
+            else:
+                print("Klaida: Neteisingas pasirinkimas. Bandykite dar kartą.")
+        except Exception as e:
+            print(f"Įvyko netikėta klaida: {e}")
+            print("===== Klaidos detalės: =====")
+            traceback.print_exc()
+            print("===========================")
+            input("\nSpauskite ENTER, kad tęstumėte...")
+
 def main():
     """Pagrindinė programos funkcija su begaliniu meniu ciklu."""
     while True:
@@ -141,6 +297,9 @@ def main():
             elif choice == '4':
                 # Kategorijų ir agentų valdymo sistema
                 run_category_system()
+            elif choice == '5':
+                # Prompt'ų šablonų valdymo sistema
+                run_templates_system()
             elif choice == '0':
                 print("Programa baigia darbą. Iki greito!")
                 break

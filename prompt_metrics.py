@@ -12,6 +12,14 @@ def count_words(text):
     """Counts the number of words in a text"""
     if not text:
         return 0
+    
+    # Įsitikiname, kad turime tekstinę eilutę
+    if not isinstance(text, str):
+        try:
+            text = str(text)
+        except:
+            return 0
+    
     return len(text.split())
 
 def analyze_clarity(prompt):
@@ -233,6 +241,13 @@ def evaluate_prompt(prompt):
     Returns:
         Dictionary with scores for each metric and overall score
     """
+    # Konvertuojame į tekstą, jei gautas kitokio tipo objektas
+    if not isinstance(prompt, str):
+        try:
+            prompt = str(prompt)
+        except:
+            prompt = ""
+    
     if not prompt or not prompt.strip():
         return {
             "clarity": 0,

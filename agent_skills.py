@@ -138,7 +138,7 @@ def get_agent_specialties(agent_id):
 if __name__ == "__main__":
     # Jei paleidžiama tiesiogiai, sukurti numatytąjį įgūdžių matricą
     print("Creating default agent skills matrix...")
-    create_default_agent_skills()
+    skills = create_default_agent_skills()
     print("Done. Agent skills saved to", AGENT_SKILLS_FILE)
     
     # Testuojame agentų gavimą pagal kategoriją

@@ -1,7 +1,15 @@
 # /AgentForge/execution_cycle.py
 
+"""
+Vykdymo ciklo modulis.
+
+Šis modulis atsakingas už vartotojo užklausos optimizavimą
+naudojant hierarchinę kategorijų sistemą ir dinaminius agentus.
+"""
+
 # Importuojame 'config' modulį, kad galėtume pasiekti nustatymus
 import config
+import traceback  # Pridėkime šį importą
 from crewai import Crew, Process, Agent, Task
 from agents import prompt_analyst, prompt_critic, prompt_refiner
 from tasks_execution import analysis_task, critique_task, refinement_task
@@ -78,9 +86,18 @@ def run_execution_cycle(user_prompt: str):
 
     try:
         final_prompt_en = prompt_engineering_crew.kickoff()
+        
+        # Patikrinkime, ar turime CrewOutput objektą ir išgaukime tekstą
+        if hasattr(final_prompt_en, "raw"):
+            # CrewAI grąžina CrewOutput objektą
+            final_prompt_en_text = final_prompt_en.raw
+        else:
+            # Jei ne objektas, bandome konvertuoti į tekstą
+            final_prompt_en_text = str(final_prompt_en)
     except Exception as e:
         print(f"Klaida vykdant užklausos optimizavimą: {e}")
-        final_prompt_en = f"Nepavyko optimizuoti užklausos. Klaida: {e}. Originali užklausa: {user_prompt}"
+        final_prompt_en_text = f"Nepavyko optimizuoti užklausos. Klaida: {e}. Originali užklausa: {user_prompt}"
+        final_prompt_en = final_prompt_en_text
     
     print("\n\n" + "="*50)
     print("|| Initial User Prompt:")
@@ -96,18 +113,70 @@ def run_execution_cycle(user_prompt: str):
     # NAUJAS FUNKCIONALUMAS: Analizuojame prompt'o kokybę
     try:
         from prompt_metrics import evaluate_prompt, print_evaluation_result
-        evaluation_result = evaluate_prompt(final_prompt_en)
+        # Naudojame tekstinę versiją kokybės vertinimui
+        evaluation_result = evaluate_prompt(final_prompt_en_text)
         print_evaluation_result(evaluation_result)
     except Exception as e:
         print(f"Nepavyko atlikti prompt'o kokybės vertinimo: {e}")
+        print(f"Prompt tipo informacija: {type(final_prompt_en)}")
+        # Išplėstinis derinimas
+        if hasattr(final_prompt_en, "__dict__"):
+            print("CrewOutput atributai:")
+            for attr_name in dir(final_prompt_en):
+                if not attr_name.startswith("_"):  # Praleidžiame privačius atributus
+                    try:
+                        attr_value = getattr(final_prompt_en, attr_name)
+                        print(f"  - {attr_name}: {type(attr_value)}")
+                    except:
+                        pass
+        traceback.print_exc()
 
+    # Atnaujinimas: po prompt'o kokybės vertinimo, pasiūlykime išsaugoti kaip šabloną
+    print("\nOptimizavimas baigtas!")
+    save_choice = input("Ar norite išsaugoti šį optimizuotą prompt'ą kaip šabloną? (y/n): ").lower()
+    if save_choice in ["y", "yes", "taip"]:
+        try:
+            from prompt_templates import save_template
+            
+            print("\n=== Šablono informacijos įvedimas ===")
+            name = input("Įveskite šablono pavadinimą: ")
+            description = input("Įveskite šablono aprašymą: ")
+            
+            # Siūlome kategoriją pagal klasifikavimo rezultatus
+            suggested_category = "general"
+            if "category_result" in locals() and category_result["confidence"] > 60:
+                suggested_category = category_result["main_category"]
+            
+            category = input(f"Įveskite kategoriją [{suggested_category}]: ")
+            if not category:
+                category = suggested_category
+            
+            tags_input = input("Įveskite žymes (atskirtas kableliais): ")
+            tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()]
+            
+            if name and description:
+                template_data = {
+                    "name": name,
+                    "description": description,
+                    "category": category,
+                    "original_prompt": user_prompt,
+                    "optimized_prompt": final_prompt_en_text,
+                    "tags": tags
+                }
+                template_id = save_template(template_data)
+                print(f"\nŠablonas sukurtas sėkmingai! ID: {template_id}")
+            else:
+                print("Klaida: Pavadinimas ir aprašymas yra privalomi.")
+        except Exception as e:
+            print(f"Klaida išsaugant šabloną: {e}")
+    
     if original_lang != 'en':
         while True:
             choice = input(f"\nAr išversti galutinę užklausą į pradinę kalbą ({original_lang})? (y/n): ").lower()
-            if choice in ['y', 'yes']:
+            if choice in ['y', 'yes', 'taip']:
                 print("--- Verčiama... Tai gali užtrukti minutėlę... ---")
                 try:
-                    # PATAISYMAS: Naudojame jau importuotus objektus, ne lokalius
+                    # PATAISYMAS: Naudojame tekstinę versiją vertimui
                     translator_agent = Agent(
                         role="Professional Translator",
                         goal=f"Translate the English text into {original_lang}",
@@ -116,7 +185,7 @@ def run_execution_cycle(user_prompt: str):
                     )
                     
                     translation_task = Task(
-                        description=f"Translate this text into {original_lang}:\n\n{final_prompt_en}",
+                        description=f"Translate this text into {original_lang}:\n\n{final_prompt_en_text}",
                         expected_output="The translated text with no additional comments",
                         agent=translator_agent
                     )
@@ -137,8 +206,13 @@ def run_execution_cycle(user_prompt: str):
                 except Exception as e:
                     print(f"Klaida verčiant tekstą: {e}")
                 break
-            elif choice in ['n', 'no']:
+            elif choice in ['n', 'no', 'ne']:
                 print("Vertimas atšauktas.")
                 break
             else:
                 print("Neteisingas pasirinkimas. Įveskite 'y' arba 'n'.")
+
+if __name__ == "__main__":
+    # Testavimas
+    test_prompt = "Write a Python function to calculate Fibonacci numbers"
+    run_execution_cycle(test_prompt)
