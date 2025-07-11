@@ -1,5 +1,0 @@
-
-- category: Advanced Reasoning
-  rule_id: ADV004
-  name: Interactive Active-Prompting
-  description: This rule introduces interactive active-prompting techniques, enhancing model adaptability by dynamically adjusting prompts based on previous outputs, improving response relevance and coherence.
