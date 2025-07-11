@@ -1,0 +1,347 @@
+
+# AgentForge Projekto Struktūros Ataskaita
+Sukurta: 2025-07-11 17:49:40
+
+## 📁 Dabartinė failų struktūra
+
+AgentForge/
+├── templates/
+├── test_results/
+│   └── test_results.log (57.2 KB) - Log failas
+├── tools/
+│   └── migration/
+│       ├── reports/
+│       │   └── README.md (967 B) - Markdown dokumentacija
+│       ├── __init__.py (245 B) - Python modulis (14 eilutės)
+│       ├── project_scanner.py (13.2 KB) - Python modulis (357 eilutės)
+│       └── run_scanner.py (2.7 KB) - Python modulis (82 eilutės)
+├── agent_skills.py (5.9 KB) - Python modulis (150 eilutės)
+├── agent_skills.yaml (2.3 KB) - YAML konfigūracija
+├── AgentForge.code-workspace (247 B)
+├── agents.py (6.3 KB) - Python modulis (144 eilutės)
+├── categories.py (8.4 KB) - Python modulis (183 eilutės)
+├── categories.yaml (4.2 KB) - YAML konfigūracija
+├── category_classifier.py (6.0 KB) - Python modulis (166 eilutės)
+├── config.py (1.4 KB) - Python modulis (38 eilutės)
+├── custom_tools.py (8.0 KB) - Python modulis (207 eilutės)
+├── development_plan.md (29.8 KB) - Markdown dokumentacija
+├── dynamic_agents.py (3.3 KB) - Python modulis (96 eilutės)
+├── execution_cycle.py (9.6 KB) - Python modulis (218 eilutės)
+├── kanonine_sistema.yaml (290 B) - YAML konfigūracija
+├── main.py (14.7 KB) - Python modulis (316 eilutės)
+├── maintenance_cycle.py (1.1 KB) - Python modulis (30 eilutės)
+├── PROJECT_LOG.txt (5.8 KB) - Tekstinis failas
+├── prompt_metrics.py (10.6 KB) - Python modulis (330 eilutės)
+├── prompt_templates.py (9.2 KB) - Python modulis (271 eilutės)
+├── README.md (6.0 KB) - Markdown dokumentacija
+├── requirements.txt (3.8 KB) - Tekstinis failas
+├── run_curation.py (1.8 KB) - Python modulis (50 eilutės)
+├── source_registry.yaml (891 B) - YAML konfigūracija
+├── tasks_execution.py (2.6 KB) - Python modulis (65 eilutės)
+├── tasks_maintenance.py (2.8 KB) - Python modulis (52 eilutės)
+├── test_system.py (11.4 KB) - Python modulis (291 eilutės)
+├── update_repo.py (3.2 KB) - Python modulis (81 eilutės)
+├── ziniu_baze.md (970 B) - Markdown dokumentacija
+└── ziniu_baze.yaml (1.3 KB) - YAML konfigūracija
+
+
+## 📊 Python failų analizė
+
+Iš viso Python failų: 20
+
+### agents.py
+- **Eilutės:** 144
+- **Dydis:** 6463 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 3 vnt.
+- **Import'ai:** 3 vnt.
+
+**Pagrindiniai import'ai:**
+  - from crewai import Agent
+  - from crewai_tools import SerperDevTool
+  - from custom_tools import file_write_tool, yaml_read_tool, fact_checker_tool, load_knowledge_base, save_knowledge_base, load_source_registry
+
+### agent_skills.py
+- **Eilutės:** 150
+- **Dydis:** 6006 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 4 vnt.
+- **Import'ai:** 2 vnt.
+
+**Pagrindiniai import'ai:**
+  - import yaml
+  - import os
+
+### categories.py
+- **Eilutės:** 183
+- **Dydis:** 8565 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 4 vnt.
+- **Import'ai:** 2 vnt.
+
+**Pagrindiniai import'ai:**
+  - import yaml
+  - import os
+
+### category_classifier.py
+- **Eilutės:** 166
+- **Dydis:** 6117 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 5 vnt.
+- **Import'ai:** 5 vnt.
+
+**Pagrindiniai import'ai:**
+  - import os
+  - import re
+  - import json
+  - from categories import load_categories
+  - import config
+
+### config.py
+- **Eilutės:** 38
+- **Dydis:** 1429 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 0 vnt.
+- **Import'ai:** 2 vnt.
+
+**Pagrindiniai import'ai:**
+  - import os
+  - from dotenv import load_dotenv
+
+### custom_tools.py
+- **Eilutės:** 207
+- **Dydis:** 8195 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 13 vnt.
+- **Import'ai:** 5 vnt.
+
+**Pagrindiniai import'ai:**
+  - import yaml
+  - from langdetect import detect
+  - from crewai.tools import tool
+  - from crewai import Agent, Task, Crew
+  - from crewai_tools import SerperDevTool
+
+### dynamic_agents.py
+- **Eilutės:** 96
+- **Dydis:** 3395 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 3 vnt.
+- **Import'ai:** 3 vnt.
+
+**Pagrindiniai import'ai:**
+  - from categories import load_categories
+  - from agent_skills import load_agent_skills, get_best_agents_for_category
+  - from crewai import Agent
+
+### execution_cycle.py
+- **Eilutės:** 218
+- **Dydis:** 9851 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 1 vnt.
+- **Import'ai:** 10 vnt.
+
+**Pagrindiniai import'ai:**
+  - import config
+  - import traceback  # Pridėkime šį importą
+  - from crewai import Crew, Process, Agent, Task
+  - from agents import prompt_analyst, prompt_critic, prompt_refiner
+  - from tasks_execution import analysis_task, critique_task, refinement_task
+  - ... ir dar 5
+
+### main.py
+- **Eilutės:** 316
+- **Dydis:** 15066 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 6 vnt.
+- **Import'ai:** 16 vnt.
+
+**Pagrindiniai import'ai:**
+  - from maintenance_cycle import run_maintenance_cycle
+  - from execution_cycle import run_execution_cycle
+  - import traceback
+  - from categories import list_all_categories
+  - from category_classifier import get_query_category, print_classification_result
+  - ... ir dar 11
+
+### maintenance_cycle.py
+- **Eilutės:** 30
+- **Dydis:** 1129 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 1 vnt.
+- **Import'ai:** 4 vnt.
+
+**Pagrindiniai import'ai:**
+  - import config
+  - from crewai import Crew, Process
+  - from agents import researcher_agent, synthesizer_agent, rule_engineer_agent
+  - from tasks_maintenance import research_task, synthesis_task, rule_engineering_task
+
+### prompt_metrics.py
+- **Eilutės:** 330
+- **Dydis:** 10821 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 8 vnt.
+- **Import'ai:** 2 vnt.
+
+**Pagrindiniai import'ai:**
+  - import re
+  - import string
+
+### prompt_templates.py
+- **Eilutės:** 271
+- **Dydis:** 9401 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 13 vnt.
+- **Import'ai:** 4 vnt.
+
+**Pagrindiniai import'ai:**
+  - import os
+  - import yaml
+  - import json
+  - from datetime import datetime
+
+### run_curation.py
+- **Eilutės:** 50
+- **Dydis:** 1868 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 0 vnt.
+- **Import'ai:** 3 vnt.
+
+**Pagrindiniai import'ai:**
+  - import config  # Užtikrina, kad API raktai būtų nustatyti
+  - from crewai import Crew, Process, Task
+  - from agents import librarian_agent
+
+### tasks_execution.py
+- **Eilutės:** 65
+- **Dydis:** 2673 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 0 vnt.
+- **Import'ai:** 4 vnt.
+
+**Pagrindiniai import'ai:**
+  - from textwrap import dedent
+  - from crewai import Task
+  - from agents import prompt_analyst, prompt_critic, prompt_refiner
+  - from custom_tools import load_knowledge_base_tool
+
+### tasks_maintenance.py
+- **Eilutės:** 52
+- **Dydis:** 2856 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 0 vnt.
+- **Import'ai:** 3 vnt.
+
+**Pagrindiniai import'ai:**
+  - from crewai import Task
+  - from agents import researcher_agent, synthesizer_agent, rule_engineer_agent
+  - from custom_tools import load_knowledge_base_tool, save_knowledge_base_tool, load_source_registry_tool
+
+### test_system.py
+- **Eilutės:** 291
+- **Dydis:** 11709 baitų
+- **Klasės:** AgentForgeTestCase, CategorySystemTestCase, AgentSkillsTestCase
+- **Funkcijos:** 13 vnt.
+- **Import'ai:** 19 vnt.
+
+**Pagrindiniai import'ai:**
+  - import unittest
+  - from unittest.mock import patch, MagicMock
+  - import os
+  - import sys
+  - import datetime
+  - ... ir dar 14
+
+### update_repo.py
+- **Eilutės:** 81
+- **Dydis:** 3301 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 2 vnt.
+- **Import'ai:** 2 vnt.
+
+**Pagrindiniai import'ai:**
+  - import sys
+  - import subprocess
+
+### tools\migration\project_scanner.py
+- **Eilutės:** 357
+- **Dydis:** 13538 baitų
+- **Klasės:** ProjectScanner
+- **Funkcijos:** 12 vnt.
+- **Import'ai:** 4 vnt.
+
+**Pagrindiniai import'ai:**
+  - import os
+  - import datetime
+  - from pathlib import Path
+  - from typing import List, Dict, Set
+
+### tools\migration\run_scanner.py
+- **Eilutės:** 82
+- **Dydis:** 2793 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 1 vnt.
+- **Import'ai:** 5 vnt.
+
+**Pagrindiniai import'ai:**
+  - import sys
+  - import os
+  - from pathlib import Path
+  - from tools.migration.project_scanner import ProjectScanner
+  - import datetime
+
+### tools\migration\__init__.py
+- **Eilutės:** 14
+- **Dydis:** 245 baitų
+- **Klasės:** Nėra
+- **Funkcijos:** 0 vnt.
+- **Import'ai:** 1 vnt.
+
+**Pagrindiniai import'ai:**
+  - from .project_scanner import ProjectScanner
+
+
+
+## 🔄 Siūlomas migracijos žemėlapis
+
+Dabartinis failas → Nauja vieta:
+
+📦 config.py → agentforge/core/config.py
+📦 custom_tools.py → agentforge/utils/file_operations.py
+📦 agents.py → agentforge/agents/__init__.py
+📦 agent_skills.py → agentforge/agents/skills.py
+📦 dynamic_agents.py → agentforge/agents/dynamic_selection.py
+📦 categories.py → agentforge/categories/manager.py
+📦 category_classifier.py → agentforge/categories/classifier.py
+📦 maintenance_cycle.py → agentforge/workflows/maintenance.py
+📦 execution_cycle.py → agentforge/workflows/execution.py
+📦 tasks_maintenance.py → agentforge/workflows/tasks/maintenance_tasks.py
+📦 tasks_execution.py → agentforge/workflows/tasks/execution_tasks.py
+📦 prompt_templates.py → agentforge/templates/manager.py
+📦 prompt_metrics.py → agentforge/analysis/metrics.py
+📦 test_system.py → tests/integration/test_full_workflow.py
+📦 main.py → agentforge/ui/cli/main_menu.py
+📦 categories.yaml → data/config/categories.yaml
+📦 agent_skills.yaml → data/config/agent_skills.yaml
+📦 ziniu_baze.yaml → data/knowledge_base/ziniu_baze.yaml
+📦 kanonine_sistema.yaml → data/knowledge_base/kanonine_sistema.yaml
+📦 source_registry.yaml → data/knowledge_base/source_registry.yaml
+📦 templates/ → data/templates/
+📦 test_results/ → data/results/
+❌ __pycache__/ → [IŠTRINTI]
+
+
+## 📈 Statistika
+
+- **Python failų:** 20
+- **YAML failų:** 5
+- **Iš viso perkeltinų failų:** 22
+- **Ištrintinų failų/aplankų:** 1
+
+## 🎯 Siūloma nauja struktūra
+
+Žr. development_plan.md sekciją "🎯 Galutinė optimizuota struktūra"
+
+---
+Ataskaita sugeneruota automatiškai naudojant ProjectScanner įrankį.
