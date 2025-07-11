@@ -1,6 +1,3 @@
-# AgentForge agent skills configuration
-# Defines skills and specialties of all available agents
-
 agents:
   prompt_analyst:
     name: Prompt Analyst
@@ -10,11 +7,10 @@ agents:
       creative_content: 3
       analysis: 5
       development: 3
-    specialties: 
-      - query understanding
-      - intent detection
-      - prompt structuring
-  
+    specialties:
+    - query understanding
+    - intent detection
+    - prompt structuring
   prompt_critic:
     name: Prompt Critic
     description: Evaluates and provides critique on proposed prompts
@@ -23,11 +19,10 @@ agents:
       creative_content: 4
       analysis: 5
       development: 3
-    specialties: 
-      - prompt evaluation
-      - weakness identification
-      - improvement suggestion
-  
+    specialties:
+    - prompt evaluation
+    - weakness identification
+    - improvement suggestion
   prompt_refiner:
     name: Prompt Refiner
     description: Refines and optimizes prompts for maximum effectiveness
@@ -36,11 +31,10 @@ agents:
       creative_content: 4
       analysis: 3
       development: 3
-    specialties: 
-      - prompt optimization
-      - clarity enhancement
-      - structure improvement
-  
+    specialties:
+    - prompt optimization
+    - clarity enhancement
+    - structure improvement
   creative_specialist:
     name: Creative Specialist
     description: Specializes in creative content generation prompts
@@ -49,12 +43,11 @@ agents:
       creative_content: 5
       analysis: 2
       development: 1
-    specialties: 
-      - creative writing
-      - image prompting
-      - narrative design
-      - artistic direction
-  
+    specialties:
+    - creative writing
+    - image prompting
+    - narrative design
+    - artistic direction
   technical_specialist:
     name: Technical Specialist
     description: Specializes in technical and development-related prompts
@@ -63,12 +56,11 @@ agents:
       creative_content: 1
       analysis: 3
       development: 5
-    specialties: 
-      - code generation
-      - debugging assistance
-      - technical explanation
-      - system design
-  
+    specialties:
+    - code generation
+    - debugging assistance
+    - technical explanation
+    - system design
   research_specialist:
     name: Research Specialist
     description: Specializes in information retrieval and research prompts
@@ -77,13 +69,12 @@ agents:
       creative_content: 2
       analysis: 4
       development: 2
-    specialties: 
-      - research methodologies
-      - source evaluation
-      - fact verification
-      - data collection
-
+    specialties:
+    - research methodologies
+    - source evaluation
+    - fact verification
+    - data collection
 metadata:
-  version: "1.0"
-  last_updated: "2025-07-10"
-  skill_scale: "1-5 (novice to expert)"
+  version: '1.0'
+  last_updated: '2025-07-10'
+  skill_scale: 1-5 (novice to expert)
