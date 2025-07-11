@@ -97,9 +97,13 @@ def run_category_system():
                 # Testuoti dinaminių agentų parinkimą
                 test_category = input("\nĮveskite kategoriją (information_retrieval, creative_content, analysis, development): ")
                 if test_category:
-                    from dynamic_agents import get_dynamic_crew_for_category, print_dynamic_agents_info
+                    from ...agents.dynamic_selection import get_dynamic_crew_for_category
+                    # print_dynamic_agents_info function not implemented, adding basic output
                     agents = get_dynamic_crew_for_category(test_category)
-                    print_dynamic_agents_info(agents)
+                    print(f"\n=== Dynamically selected agents for category '{test_category}' ===")
+                    for agent in agents:
+                        print(f"- {agent}")
+                    print("=====================================")
                 else:
                     print("Klaida: Kategorija negali būti tuščia.")
                 input("\nSpauskite ENTER, kad tęstumėte...")
@@ -191,7 +195,7 @@ def run_templates_system():
                         use_choice = input("\nAr norite naudoti šį šabloną užklausos optimizavimui? (y/n): ")
                         if use_choice.lower() in ['y', 'yes', 'taip']:
                             user_input = input("\nĮveskite parametrus, kuriuos norite pakeisti šablone (palikite tuščią, jei norite naudoti originalą): ")
-                            from execution_cycle import run_execution_cycle
+                            from ...workflows.execution import run_execution_cycle
                             prompt_to_use = template['optimized_prompt']
                             if user_input:
                                 # Čia galima būtų pridėti parametrų pakeitimo logiką
@@ -282,18 +286,21 @@ def main():
             elif choice == '3':
                 # Paleidžiame testavimo modulį
                 print("Paleidžiami sistemos testai...")
-                from test_system import run_tests, clean_old_logs
-                
-                # Išvalyti senus žurnalus prieš testų paleidimą
-                clean_old_logs()
-                
-                # Paleisti testus - jie patys paklaus apie išsaugojimą kai bus įvykdyti
-                success = run_tests()
-                
-                if success:
-                    print("\nVisi testai sėkmingai įvykdyti!")
-                else:
-                    print("\nKai kurie testai nepavyko. Rezultatai išsaugoti test_results/test_results.log faile.")
+                try:
+                    import sys
+                    sys.path.append('.')
+                    from tests.integration.test_full_workflow import run_tests
+                    
+                    # Paleidžiame testus
+                    success = run_tests()
+                    
+                    if success:
+                        print("\n✅ Visi testai praeiti sėkmingai!")
+                    else:
+                        print("\n❌ Kai kurie testai nepraėjo.")
+                except Exception as e:
+                    print(f"Klaida paleidžiant testus: {e}")
+                    print("Testų sistema bus patobulinta ateityje.")
             elif choice == '4':
                 # Kategorijų ir agentų valdymo sistema
                 run_category_system()
