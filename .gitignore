@@ -7,3 +7,28 @@
 # Python cache
 __pycache__/
 *.pyc
+*/__pycache__/
+*.pyo
+*.pyd
+
+# IDE files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Test results
+test_results/
+*.test
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
