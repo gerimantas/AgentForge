@@ -1,0 +1,8 @@
+
+- applies_to:
+  - Critic
+  - Refiner
+  category: Advanced Reasoning
+  description: Guide language models to articulate their reasoning process step-by-step before arriving at a conclusion, enhancing accuracy in complex scenarios.
+  name: Chain of Thought Prompting
+  rule_id: ADV004
