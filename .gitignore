@@ -41,10 +41,12 @@ desktop.ini
 *.swp
 *.swo
 *~
+desktop.ini
 
 # Test results
 test_results/
 *.test
+data/results/
 
 # Build artifacts
 build/

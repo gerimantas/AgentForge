@@ -84,6 +84,13 @@ Neseniai įgyvendinti pakeitimai:
 ### 1. Projekto paleidimas
 
 ```bash
+# Pirmasis paleidimas (Windows)
+scripts\setup\setup_env.bat
+
+# Kasdienis naudojimas
+scripts\setup\start.bat
+
+# Arba tiesiai
 python main.py
 ```
 
