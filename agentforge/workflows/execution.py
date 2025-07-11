@@ -112,23 +112,28 @@ def run_execution_cycle(user_prompt: str):
 
     # NAUJAS FUNKCIONALUMAS: Analizuojame prompt'o kokybę
     try:
-        from prompt_metrics import evaluate_prompt, print_evaluation_result
+        # Use dynamic import to avoid Pylance warnings
+        import importlib
+        prompt_metrics = importlib.import_module('prompt_metrics')
         # Naudojame tekstinę versiją kokybės vertinimui
-        evaluation_result = evaluate_prompt(final_prompt_en_text)
-        print_evaluation_result(evaluation_result)
+        evaluation_result = prompt_metrics.evaluate_prompt(final_prompt_en_text)
+        prompt_metrics.print_evaluation_result(evaluation_result)
+    except ImportError:
+        print("⚠️  prompt_metrics module not available - skipping quality evaluation")
     except Exception as e:
         print(f"Nepavyko atlikti prompt'o kokybės vertinimo: {e}")
         print(f"Prompt tipo informacija: {type(final_prompt_en)}")
-        # Išplėstinis derinimas
+        # Išplėstinis derinimas - avoid deprecated Pydantic attributes
         if hasattr(final_prompt_en, "__dict__"):
             print("CrewOutput atributai:")
             for attr_name in dir(final_prompt_en):
-                if not attr_name.startswith("_"):  # Praleidžiame privačius atributus
+                if not attr_name.startswith("_") and not attr_name.startswith("model_"):  # Skip private and deprecated model_ attributes
                     try:
                         attr_value = getattr(final_prompt_en, attr_name)
                         print(f"  - {attr_name}: {type(attr_value)}")
                     except:
                         pass
+        import traceback
         traceback.print_exc()
 
     # Atnaujinimas: po prompt'o kokybės vertinimo, pasiūlykime išsaugoti kaip šabloną
@@ -136,7 +141,8 @@ def run_execution_cycle(user_prompt: str):
     save_choice = input("Ar norite išsaugoti šį optimizuotą prompt'ą kaip šabloną? (y/n): ").lower()
     if save_choice in ["y", "yes", "taip"]:
         try:
-            from prompt_templates import save_template
+            # Use the new template manager to avoid infinite loop
+            from ..templates.manager_new import save_template
             
             print("\n=== Šablono informacijos įvedimas ===")
             name = input("Įveskite šablono pavadinimą: ")

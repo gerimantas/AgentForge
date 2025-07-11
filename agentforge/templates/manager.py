@@ -37,14 +37,30 @@ def create_template_index():
 
 def load_template_index():
     """Loads the template index"""
-    ensure_templates_dir()
+    # Don't call ensure_templates_dir() to avoid recursion
+    if not os.path.exists(TEMPLATES_INDEX_FILE):
+        # Create basic index if it doesn't exist
+        index = {
+            "templates": {},
+            "metadata": {
+                "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "count": 0
+            }
+        }
+        if not os.path.exists(TEMPLATES_DIR):
+            os.makedirs(TEMPLATES_DIR)
+        with open(TEMPLATES_INDEX_FILE, 'w', encoding='utf-8') as file:
+            yaml.dump(index, file, sort_keys=False, default_flow_style=False)
+        return index
     
     with open(TEMPLATES_INDEX_FILE, 'r', encoding='utf-8') as file:
         return yaml.safe_load(file)
 
 def save_template_index(index):
     """Saves the template index"""
-    ensure_templates_dir()
+    # Don't call ensure_templates_dir() here to avoid recursion
+    if not os.path.exists(TEMPLATES_DIR):
+        os.makedirs(TEMPLATES_DIR)
     
     # Update metadata
     index["metadata"]["last_updated"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -233,7 +249,8 @@ def format_template_list(templates):
     
     return "\n".join(result)
 
-if __name__ == "__main__":
+def initialize_templates():
+    """Initialize templates directory and create sample templates if needed"""
     # Create sample templates if index is empty
     ensure_templates_dir()
     index = load_template_index()
@@ -264,8 +281,5 @@ if __name__ == "__main__":
         save_template(technical_template)
         
         print("Sample templates created!")
-    
-    # Display all templates
-    templates = list_templates()
-    print("\nAvailable Templates:")
-    print(format_template_list(templates))
+
+# End of file

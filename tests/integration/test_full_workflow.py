@@ -86,7 +86,7 @@ class AgentForgeTestCase(unittest.TestCase):
     
     def test_config_loading(self):
         """Testuoja ar konfigūracija tinkamai įkraunama."""
-        import config
+        from agentforge.core import config
         # Tikriname ar MAX_ITERATIONS yra skaičius
         self.assertIsInstance(config.MAX_ITERATIONS, int)
         # Tikriname ar API raktai yra
@@ -122,10 +122,10 @@ class AgentForgeTestCase(unittest.TestCase):
             # Turime užtikrinti, kad execution_cycle modulis būtų iš naujo importuotas
             # su naujais patch'ais
             import sys
-            if 'execution_cycle' in sys.modules:
-                del sys.modules['execution_cycle']
+            if 'agentforge.workflows.execution' in sys.modules:
+                del sys.modules['agentforge.workflows.execution']
             
-            from execution_cycle import run_execution_cycle
+            from agentforge.workflows.execution import run_execution_cycle
             
             # Pakeičiame input funkciją, kad testas nesustotų
             with patch('builtins.input', return_value='n'):
@@ -138,7 +138,7 @@ class AgentForgeTestCase(unittest.TestCase):
     def test_yaml_file_operations(self):
         """Testuoja YAML failų operacijas."""
         import yaml
-        from custom_tools import load_knowledge_base, save_knowledge_base
+        from agentforge.utils.file_operations import load_knowledge_base, save_knowledge_base
         
         # Sukuriame testinį žinių bazės įrašą
         test_knowledge = [
@@ -179,7 +179,7 @@ class CategorySystemTestCase(unittest.TestCase):
     
     def test_category_loading(self):
         """Testuoja kategorijų įkėlimą iš YAML failo."""
-        from categories import load_categories
+        from agentforge.categories.manager import load_categories
         categories = load_categories()
         
         # Tikriname, ar įkeltos pagrindinės kategorijos
@@ -191,7 +191,7 @@ class CategorySystemTestCase(unittest.TestCase):
     
     def test_category_classification(self):
         """Testuoja užklausų klasifikaciją į kategorijas."""
-        from category_classifier import get_query_category
+        from agentforge.categories.classifier import get_query_category
         
         # Testuojame su keliomis užklausomis
         test_cases = [
@@ -210,7 +210,7 @@ class AgentSkillsTestCase(unittest.TestCase):
     
     def test_agent_skills_loading(self):
         """Testuoja agentų įgūdžių įkėlimą iš YAML failo."""
-        from agent_skills import load_agent_skills
+        from agentforge.agents.skills import load_agent_skills
         skills = load_agent_skills()
         
         # Tikriname, ar įkelti agentų duomenys
@@ -220,7 +220,7 @@ class AgentSkillsTestCase(unittest.TestCase):
     
     def test_best_agents_selection(self):
         """Testuoja geriausių agentų parinkimą pagal kategoriją."""
-        from agent_skills import get_best_agents_for_category
+        from agentforge.agents.skills import get_best_agents_for_category
         
         # Tikriname, ar kiekvienai kategorijai parenkamas bent vienas agentas
         for category in ["information_retrieval", "creative_content", "analysis", "development"]:
