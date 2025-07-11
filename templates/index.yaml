@@ -1,4 +1,12 @@
-templates: {}
 metadata:
-  last_updated: '2025-07-11 19:17:39'
-  count: 0
+  count: 1
+  last_updated: '2025-07-11 19:53:51'
+templates:
+  f106a6f3:
+    category: search
+    created: '2025-07-11 19:53:51'
+    description: Provide detailed information about lavenders, including their characteristics,
+      uses, and care instructions.
+    name: search_lavenders
+    tags:
+    - information
