@@ -1,0 +1,13 @@
+# Enhanced CrewAI Integration for Stage 3
+crewai==0.70.1
+crewai-tools==0.12.1
+langchain==0.2.16
+langchain-openai==0.1.25
+langchain-community==0.2.16
+python-dotenv==1.0.0
+
+# Additional tools for enhanced functionality
+rich==13.7.1
+asyncio==3.4.3
+aiofiles==23.2.1
+websockets==12.0
