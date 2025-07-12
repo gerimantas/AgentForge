@@ -12,6 +12,8 @@ from agentforge.workflows.execution import run_execution_cycle, test_execution_c
 from agentforge.workflows.maintenance import run_maintenance_cycle, test_maintenance_cycle
 from agentforge.categories.manager import load_categories, list_all_categories
 from agentforge.categories.classifier import get_query_category, print_classification_result
+from agentforge.analysis.metrics import evaluate_prompt
+from agentforge.templates.manager import list_templates, save_template
 
 def print_main_menu():
     """Išspausdina pagrindinį meniu."""
@@ -22,7 +24,8 @@ def print_main_menu():
     print("2. 🔧 Palaikymo ciklas (Knowledge Base Maintenance)")
     print("3. 🧪 Sistemos testai (System Tests)")
     print("4. 📊 Kategorijų valdymas (Category Management)")
-    print("5. 📈 Sistemos statistika (System Statistics)")
+    print("5. 📝 Šablonų valdymas (Template Management)")
+    print("6. 📈 Sistemos statistika (System Statistics)")
     print("0. 🚪 Išeiti (Exit)")
     print("="*60)
 
@@ -60,7 +63,7 @@ def handle_execution_cycle():
 
 def handle_maintenance_cycle():
     """Tvarko palaikymo ciklo paleidimą."""
-    print("\\n� PALAIKYMO CIKLAS")
+    print("\\n🔧 PALAIKYMO CIKLAS")
     print("-" * 40)
     
     confirm = input("Ar tikrai norite paleisti palaikymo ciklą? (y/n): ").strip().lower()
@@ -124,23 +127,44 @@ def handle_category_management():
             break
         elif choice == '1':
             print("\\n📋 Sistemos kategorijos:")
-            try:
-                list_all_categories()
-            except Exception as e:
-                print(f"❌ Nepavyko įkelti kategorijų: {e}")
+            list_all_categories()
         elif choice == '2':
             query = input("\\nĮveskite užklausą klasifikacijai: ").strip()
             if query:
-                try:
-                    result = get_query_category(query)
-                    print_classification_result(result)
-                except Exception as e:
-                    print(f"❌ Nepavyko klasifikuoti užklausos: {e}")
+                result = get_query_category(query)
+                print_classification_result(result)
             else:
                 print("❌ Užklausa negali būti tuščia!")
         elif choice == '3':
             print("\\n📈 Kategorijų statistika:")
             show_category_statistics()
+        else:
+            print("❌ Neteisingas pasirinkimas!")
+
+def handle_template_management():
+    """Tvarko šablonų valdymą."""
+    print("\\n📝 ŠABLONŲ VALDYMAS")
+    print("-" * 40)
+    print("1. 📋 Peržiūrėti šablonus")
+    print("2. ➕ Pridėti šabloną")
+    print("3. ✏️ Redaguoti šabloną")
+    print("4. 🗑️ Šalinti šabloną")
+    print("0. ⬅️ Grįžti")
+    
+    while True:
+        choice = input("\\nPasirinkite veiksmą (0-4): ").strip()
+        
+        if choice == '0':
+            break
+        elif choice == '1':
+            print("\\n📋 Sistemos šablonai:")
+            show_templates()
+        elif choice == '2':
+            add_template()
+        elif choice == '3':
+            edit_template()
+        elif choice == '4':
+            delete_template()
         else:
             print("❌ Neteisingas pasirinkimas!")
 
@@ -153,11 +177,12 @@ def handle_system_statistics():
         # Rodyti bendras statistikas
         print("📊 Bendros statistikos:")
         print(f"• Kategorijų skaičius: {get_categories_count()}")
+        print(f"• Šablonų skaičius: {get_templates_count()}")
         print(f"• Žinių bazės įrašų: {get_knowledge_base_count()}")
         print(f"• Šaltinių registro įrašų: {get_sources_count()}")
         
         # Rodyti sistemos būsenos informaciją
-        print("\\n� Sistemos būsena:")
+        print("\\n🔧 Sistemos būsena:")
         print(f"• API raktai: {'✅ Konfigūruoti' if check_api_keys() else '❌ Nėra'}")
         print(f"• Žinių bazė: {'✅ Prieinama' if check_knowledge_base() else '❌ Nepasiekiama'}")
         print(f"• Šaltinių registras: {'✅ Prieinama' if check_sources_registry() else '❌ Nepasiekiama'}")
@@ -177,7 +202,7 @@ def main():
         while True:
             print_main_menu()
             
-            choice = input("\\nPasirinkite veiksmą (0-5): ").strip()
+            choice = input("\\nPasirinkite veiksmą (0-6): ").strip()
             
             if choice == '0':
                 print("\\n👋 Iki pasimatymo!")
@@ -191,9 +216,11 @@ def main():
             elif choice == '4':
                 handle_category_management()
             elif choice == '5':
+                handle_template_management()
+            elif choice == '6':
                 handle_system_statistics()
             else:
-                print("❌ Neteisingas pasirinkimas! Pasirinkite 0-5.")
+                print("❌ Neteisingas pasirinkimas! Pasirinkite 0-6.")
                 
     except KeyboardInterrupt:
         print("\\n\\n⚠️ Programa nutraukta vartotojo.")
@@ -311,6 +338,14 @@ def get_categories_count():
     except Exception:
         return 0
 
+def get_templates_count():
+    """Grąžina šablonų skaičių."""
+    try:
+        templates = list_templates()
+        return len(templates)
+    except Exception:
+        return 0
+
 def get_knowledge_base_count():
     """Grąžina žinių bazės įrašų skaičių."""
     try:
@@ -341,6 +376,30 @@ def show_category_statistics():
             
     except Exception as e:
         print(f"❌ Nepavyko gauti kategorijų statistikos: {e}")
+
+def show_templates():
+    """Rodo šablonų sąrašą."""
+    try:
+        templates = list_templates()
+        
+        print(f"\\n📝 Šablonų sąrašas:")
+        for template_data in templates:
+            print(f"• {template_data.get('id', 'Nėra ID')}: {template_data.get('name', 'Nėra pavadinimo')}")
+            
+    except Exception as e:
+        print(f"❌ Nepavyko gauti šablonų sąrašo: {e}")
+
+def add_template():
+    """Prideda naują šabloną."""
+    print("\\n➕ Pridėjimas šablono (ne implementuota)")
+
+def edit_template():
+    """Redaguoja šabloną."""
+    print("\\n✏️ Redagavimas šablono (ne implementuota)")
+
+def delete_template():
+    """Šalina šabloną."""
+    print("\\n🗑️ Šalinimas šablono (ne implementuota)")
 
 if __name__ == "__main__":
     main()
