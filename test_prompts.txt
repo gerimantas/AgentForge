@@ -1,0 +1,5 @@
+Create a beginner's guide to machine learning
+Write a comprehensive Python tutorial
+Explain neural networks for beginners
+Create a data science roadmap
+Design a web scraping tutorial
